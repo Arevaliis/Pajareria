@@ -1,6 +1,7 @@
 public class Mensajes {
     public static void menuInicial(){
         System.out.println("""
+                
                 ======= MENÚ PRINCIPAL =======
                     1. Gestión de clientes
                     2. Gestión de pájaros
@@ -13,6 +14,7 @@ public class Mensajes {
 
     public static void menuClientes(){
         System.out.println("""
+                
                 ======= MENÚ CLIENTES ========
                     1. Alta de clientes
                     2. Baja de pájaros
@@ -25,6 +27,7 @@ public class Mensajes {
 
     public static void menuPajaros(){
         System.out.println("""
+                
                 ======== MENÚ PÁJAROS ========
                     1. Alta de pájaro
                     2. Listado
