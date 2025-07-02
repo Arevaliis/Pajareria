@@ -32,4 +32,9 @@ public class Pajaro {
     public void setPrecio(double precio) {
         this.precio = precio;
     }
+
+    @Override
+    public String toString() {
+        return "Especie: " + this.getEspecie() + ", color: " + this.getColor() + ", precio: " + this.getPrecio();
+    }
 }
