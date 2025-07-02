@@ -374,33 +374,30 @@ public class SistemaGestionPajareria {
 
     }
 
-    public static void busquedaPorEspecie(){
+    public static Pajaro busquedaPorEspecie(){
         if(basePajaros.isEmpty()){
             Mensajes.baseDatosVacia();
-            return;
+            return null;
         }
 
         boolean seguirBuscando = true;
 
         while (seguirBuscando){
             String especie = ingresarEspecie();
-            boolean pajaroEncontrado = false;
 
             Mensajes.tipoEspecie(especie);
             for (Pajaro pajaro: basePajaros){
                 if(pajaro.getEspecie().equalsIgnoreCase(especie)){
                     Mensajes.mostrarPajaro(pajaro);
-                    pajaroEncontrado = true;
+                    return pajaro;
                 }
             }
 
-            if (!pajaroEncontrado){
-                Mensajes.noExistePajaro();
-            }
-
+            Mensajes.noExistePajaro();
             Mensajes.volverBuscarPajaro();
             seguirBuscando = seguirModificandoProbando();
         }
+        return null;
     }
 
     public static void listarPajaros(){
