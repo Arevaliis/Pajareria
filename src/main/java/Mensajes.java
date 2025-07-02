@@ -147,6 +147,10 @@ public class Mensajes {
         System.out.print("\n¿Desea volver al menú de gestión de clientes? (S/N): ");
     }
 
+    public static void noHayClientes(){
+        System.out.println("No es posible acceder a la sección de clientes porque aún no se ha realizado ninguna.");
+    }
+
     public static void mensajeVolverMenuPajaros(){
         System.out.print("\n¿Desea volver al menú de gestión de pájaros? (S/N): ");
     }
@@ -191,6 +195,10 @@ public class Mensajes {
     }
     public static void volverComprarPajaro(){
         System.out.print("\n¿Desea agregar otro pájaro? (S/N): ");
+    }
+
+    public static void noHayPajaros(){
+        System.out.println("No es posible acceder a la sección de pájaros porque aún no se ha realizado ninguna.");
     }
 
     public static void compraTotal(Venta venta){
