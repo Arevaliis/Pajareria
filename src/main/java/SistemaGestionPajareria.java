@@ -7,10 +7,13 @@ public class SistemaGestionPajareria {
     static Scanner scanner = new Scanner(System.in);
     static boolean estaFuncionando = true;
     static ArrayList<Cliente> baseClientes = new ArrayList<>();
+    static ArrayList<Pajaro> basePajaros = new ArrayList<>();
 
     public static void main(String[] args) {
         baseClientes.add(new Cliente("Jose", "45454545f",  "654455445", "jj@g.com"));
         baseClientes.add(new Cliente("Juan", "45454545s",  "655555555", "ju@g.com"));
+
+        basePajaros.add(new Pajaro("Loro", "Verde", 56.32));
 
         while (estaFuncionando){
             Mensajes.menuInicial();
@@ -31,7 +34,7 @@ public class SistemaGestionPajareria {
             System.out.println("\nError -> No puede ingresar valores no numéricos.");
             return -1;
         } catch (ValorFueraRangoExcepcion e) {
-            System.out.println("\nError -> " + e.getMessage());
+            System.out.println(e.getMessage());
             return -1;
         }
         return opc;
@@ -51,6 +54,7 @@ public class SistemaGestionPajareria {
         return seguir();
     }
 
+    /* ============== Clientes ============== */
     public static void ejecutarMenuCliente(){
         Mensajes.menuClientes();
         int opc = elegir_opcion(6);
@@ -93,11 +97,11 @@ public class SistemaGestionPajareria {
         seguirMenuClientes();
     }
 
-    public static Cliente buscarPorDni(String dni){
+    public static Cliente buscarPorDni(String dni){ // No vuelve menu clientes
         if (!baseClientes.isEmpty()) {
             for (Cliente cliente : baseClientes) {
                 if (cliente.getDni().equalsIgnoreCase(dni)) {
-                    System.out.println(cliente + "\n");
+                    Mensajes.mostarCliente(cliente);
                     return cliente;
                 }
             }
@@ -113,7 +117,7 @@ public class SistemaGestionPajareria {
                 Validador.validandoNombre(nombre);
                 return nombre;
             } catch (ErrorIngresoNombreException e) {
-                System.out.println("\nError -> " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -126,7 +130,7 @@ public class SistemaGestionPajareria {
                 Validador.valindandoDni(dni);
                 return dni;
             } catch (ErrorIngresoDniException e) {
-                System.out.println("\nError -> " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -151,7 +155,7 @@ public class SistemaGestionPajareria {
                  }
 
             } catch (ErrorIngresoTelefonoException e) {
-                System.out.println("\nError -> " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -176,7 +180,7 @@ public class SistemaGestionPajareria {
                 }
 
             } catch (ErrorIngresoEmailException e) {
-                System.out.println("\nError -> " + e.getMessage());
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -285,7 +289,7 @@ public class SistemaGestionPajareria {
         }
 
         for (Cliente cliente: baseClientes){
-            System.out.println(cliente);
+            Mensajes.mostarCliente(cliente);
         }
     }
 
@@ -296,7 +300,7 @@ public class SistemaGestionPajareria {
         }
     }
 
-    /* Pájaros */
+    /* ============== Pajaros ============== */
     public static void ejecutarMenuPajaros(){
         Mensajes.menuPajaros();
         int opc = elegir_opcion(4);
@@ -307,12 +311,115 @@ public class SistemaGestionPajareria {
         }
 
         switch (opc) {
-            case 1 -> System.out.println("1");
-            case 2 -> System.out.println("2");
-            case 3 -> System.out.println("3");
-            case 4 -> {}
+            case 1 -> agregarPajaro();
+            case 2 -> listarPajaros();
+            case 3 -> busquedaPorEspecie();
+            case 4 -> {
+                return;
+            }
+        }
+
+        seguirMenuPajaros();
+    }
+
+    public static String ingresarEspecie(){
+        while (true){
+            try {
+                Mensajes.mensajeEspecie();
+                String especie = scanner.nextLine().trim();
+                Validador.validandoNombre(especie);
+                return especie;
+            }catch (ErrorIngresoNombreException e){
+                System.out.println(e.getMessage());
+            }
         }
     }
+
+    public static String ingresarColor(){
+        while (true){
+            try {
+                Mensajes.mensajeColor();
+                String color = scanner.nextLine().trim().toUpperCase();
+                Validador.validandoColor(color);
+                return color;
+            } catch (ErrorIngresoColor e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    public static double ingresarPrecio(){
+        while (true){
+            try {
+                Mensajes.mensajePrecio();
+                return (double) Math.round(Double.parseDouble(scanner.nextLine().trim()) * 100) /100;
+            } catch (NumberFormatException e) {
+                System.out.println("Error -> Debe ingresar un número. Use punto para los decimales.");
+            }
+        }
+    }
+
+    public static void agregarPajaro(){
+        boolean seguirAgregando = true;
+
+        while (seguirAgregando){
+            basePajaros.add(new Pajaro(ingresarEspecie(), ingresarColor(), ingresarPrecio()));
+            Mensajes.agregadoPajaroConExito();
+            Mensajes.agregarOtroPajaro();
+            seguirAgregando = seguirModificandoProbando();
+        }
+
+    }
+
+    public static void busquedaPorEspecie(){
+        if(basePajaros.isEmpty()){
+            Mensajes.baseDatosVacia();
+            return;
+        }
+
+        boolean seguirBuscando = true;
+
+        while (seguirBuscando){
+            String especie = ingresarEspecie();
+            boolean pajaroEncontrado = false;
+
+            Mensajes.tipoEspecie(especie);
+            for (Pajaro pajaro: basePajaros){
+                if(pajaro.getEspecie().equalsIgnoreCase(especie)){
+                    Mensajes.mostrarPajaro(pajaro);
+                    pajaroEncontrado = true;
+                }
+            }
+
+            if (!pajaroEncontrado){
+                Mensajes.noExistePajaro();
+            }
+
+            Mensajes.volverBuscarPajaro();
+            seguirBuscando = seguirModificandoProbando();
+        }
+    }
+
+    public static void listarPajaros(){
+        if(basePajaros.isEmpty()){
+            Mensajes.baseDatosVacia();
+            return;
+        }
+
+        for (Pajaro pajaro: basePajaros){
+            Mensajes.mostrarPajaro(pajaro);
+        }
+    }
+
+    public static void seguirMenuPajaros(){
+        Mensajes.mensajeVolverMenuPajaros();
+        if (seguirModificandoProbando()){
+            ejecutarMenuPajaros();
+        }
+    }
+
+
+    /* ============== Funciones Generales ============== */
 
     public static boolean seguir(){
         Mensajes.mensajeVolverMenu();
