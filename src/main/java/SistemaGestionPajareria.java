@@ -12,10 +12,10 @@ public class SistemaGestionPajareria {
     static ArrayList<Venta> baseVentas = new ArrayList<>();
 
     public static void main(String[] args) {
-       // baseClientes.add(new Cliente("JUAN","45454545F", "654454545", "juan@g.com"));
 
-        // basePajaros.add(new Pajaro("Loro", "Verde", 56.32));
-        // basePajaros.add(new Pajaro("Canario", "Amarillo", 24.50));
+        baseClientes.add(new Cliente("JUAN","45454545F", "654454545", "juan@g.com"));
+        basePajaros.add(new Pajaro("Loro", "Verde", 56.32));
+        basePajaros.add(new Pajaro("Canario", "Amarillo", 24.50));
 
         while (estaFuncionando){
             Mensajes.menuInicial();
@@ -399,11 +399,29 @@ public class SistemaGestionPajareria {
     }
 
     /* ============== Venta ============== */
+    public static boolean comprobarBasesVacias(){
+        if (baseClientes.isEmpty()) {
+            Mensajes.vacioBaseClienteDuranteCompra();
+            return true;
+        }
+
+        if (basePajaros.isEmpty()){
+            Mensajes.vacioBasePajarosDuranteCompra();
+            return true;
+        }
+        return false;
+    }
     public static void crearVenta(){
+        if (comprobarBasesVacias()){
+            return;
+        }
+
         String dni = ingresarDni();
         Cliente cliente = buscarPorDni(dni);
 
-        if (cliente != null){
+        if(cliente == null){
+            Mensajes.clienteNoExiste();
+        } else{
             LocalDate date = LocalDate.now();
             String hoy = String.valueOf(date);
             Venta venta = new Venta(cliente, new ArrayList<>(), hoy);
@@ -414,24 +432,18 @@ public class SistemaGestionPajareria {
                 listarPajaros();
                 Mensajes.comprarPajaro();
                 Pajaro pajaro = busquedaPorEspecie();
-                venta.getLineasDeVenta().add(pajaro);
 
-                Mensajes.volverComprarPajaro();
-                seguirAgregando = seguirModificandoProbando();
+                if (pajaro != null){
+                    venta.getLineasDeVenta().add(pajaro);
+                    Mensajes.volverComprarPajaro();
+                    seguirAgregando = seguirModificandoProbando();
+                }
             }
             Mensajes.compraTotal(venta);
             baseVentas.add(venta);
         }
-
-        if(cliente == null){
-            Mensajes.clienteNoExiste();
-            Mensajes.agregarClienteDuranteCompra();
-            boolean resp = seguirModificandoProbando();
-            if (resp){
-               agregarCliente();
-            }
-        }
     }
+
     /* ============== Mostrar Ventas ============== */
     public static void ejecutarMenuVentasTotales(){
         if (!baseVentas.isEmpty()){

@@ -201,12 +201,16 @@ public class Mensajes {
         System.out.println("No es posible acceder a la sección de pájaros porque aún no se ha realizado ninguna.");
     }
 
+    public static void vacioBasePajarosDuranteCompra(){
+        System.out.print("\nHay 0 pájaros agregados. Debe ingresar alguna especie para poder hacer una venta.");
+    }
+
     public static void compraTotal(Venta venta){
         System.out.println(venta);
     }
 
-    public static void agregarClienteDuranteCompra(){
-        System.out.print("\n¿Desea agregarlo? (S/N): ");
+    public static void vacioBaseClienteDuranteCompra(){
+        System.out.print("\nHay 0 clientes agregados. Debe dar de alta a un cliente para poder hacer una venta. ");
     }
 
     public static void saltoLinea(){
