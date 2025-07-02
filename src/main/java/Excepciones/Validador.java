@@ -48,12 +48,10 @@ public class Validador {
                 "VIOLETA"
         ));
 
-        // TODO HACERLO MEJOR
-        String mensaje = "Error -> Debe ingresar uno de estos colores: Rojo, Azul, Verde, Amarillo, Blanco, Negro, Naranja, Gris, Marrón, Violeta.";
+        String mensaje = "Error -> Debe ingresar uno de estos colores: " + String.join(", ", colores);
 
         if(!colores.contains(color)){
             throw new ErrorIngresoColor(mensaje);
         }
     }
-
 }
