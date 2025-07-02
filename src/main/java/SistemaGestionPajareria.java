@@ -1,5 +1,6 @@
 import Excepciones.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,10 +11,15 @@ public class SistemaGestionPajareria {
     static ArrayList<Pajaro> basePajaros = new ArrayList<>();
 
     public static void main(String[] args) {
-        baseClientes.add(new Cliente("Jose", "45454545f",  "654455445", "jj@g.com"));
-        baseClientes.add(new Cliente("Juan", "45454545s",  "655555555", "ju@g.com"));
+        baseClientes.add(new Cliente("Jose", "45454545f",  "654455445", "jose@g.com"));
+        baseClientes.add(new Cliente("Juan", "45454545s",  "655555555", "juan@g.com"));
 
         basePajaros.add(new Pajaro("Loro", "Verde", 56.32));
+        basePajaros.add(new Pajaro("Canario", "Amarillo", 24.50));
+        basePajaros.add(new Pajaro("Periquito", "Azul", 18.75));
+        basePajaros.add(new Pajaro("Cotorra", "Rojo", 30.00));
+        basePajaros.add(new Pajaro("Jilguero", "Naranja", 22.40));
+        basePajaros.add(new Pajaro("Agapornis", "Verde", 35.60));
 
         while (estaFuncionando){
             Mensajes.menuInicial();
@@ -44,7 +50,7 @@ public class SistemaGestionPajareria {
         switch (opc){
             case 1 -> ejecutarMenuCliente();
             case 2 -> ejecutarMenuPajaros();
-            case 3 -> System.out.println("3");
+            case 3 -> crearVenta();
             case 4 -> System.out.println("4");
             case 5 -> {
                 Mensajes.saliendo();
@@ -415,6 +421,28 @@ public class SistemaGestionPajareria {
         }
     }
 
+    /* ============== Ventas ============== */
+    public static void crearVenta(){
+        String dni = ingresarDni();
+        Cliente cliente = buscarPorDni(dni);
+
+        if (cliente != null){
+            LocalDate date = LocalDate.now();
+            String hoy = String.valueOf(date);
+            Venta venta = new Venta(cliente, new ArrayList<>(), hoy);
+            boolean seguirAgregando = true;
+
+            while (seguirAgregando){
+                listarPajaros();
+                Mensajes.comprarPajaro(); // Cambiarlo por menu especies
+                String especie = ingresarEspecie();
+                Pajaro pajaro = busquedaPorEspecie();
+
+                Mensajes.volverComprarPajaro();
+                seguirAgregando = seguirModificandoProbando();
+            }
+        }
+    }
 
     /* ============== Funciones Generales ============== */
 
