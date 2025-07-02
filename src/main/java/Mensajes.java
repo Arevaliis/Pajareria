@@ -47,7 +47,19 @@ public class Mensajes {
                         3. Teléfono
                         4. Email
                         5. Volver
-                ==============================
+                ================================
+                """);
+    }
+
+    public static void menuMostarVentas(){
+        System.out.println("""
+                
+                =========== CAMPOS CLIENTE ===========
+                    1. Todas las ventas
+                    2. Ventas por cliente
+                    3. Importe total de cada venta
+                    4. Volver
+                ======================================
                 """);
     }
 
@@ -128,7 +140,7 @@ public class Mensajes {
     }
 
     public static void mensajeVolverMenu(){
-        System.out.print("\n¿Desea volver al menú principal? (S/N): ");
+        System.out.print("\n¿Desea volver al menú principal? (S para Sí / N para Salir): ");
     }
 
     public static void mensajeVolverMenuClientes(){
@@ -191,5 +203,25 @@ public class Mensajes {
 
     public static void saltoLinea(){
         System.out.println();
+    }
+
+    public static void mensajeVolverMenuVentasTotales(){
+        System.out.print("\n¿Desea volver al menú de ventas totales? (S/N): ");
+    }
+
+    public static void mostrarVentasTotales(Venta venta){
+        System.out.println(venta);
+    }
+
+    public static void noHayVentas(){
+        System.out.println("No es posible acceder a la sección de ventas porque aún no se ha realizado ninguna.");
+    }
+
+    public static void mensajeContador(int contador){
+        System.out.print(contador + ". Venta: ");
+    }
+
+    public static void mensajeTotalVenta(double total){
+        System.out.print(total + "€");
     }
 }

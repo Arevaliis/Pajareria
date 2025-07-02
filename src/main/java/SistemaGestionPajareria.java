@@ -9,17 +9,13 @@ public class SistemaGestionPajareria {
     static boolean estaFuncionando = true;
     static ArrayList<Cliente> baseClientes = new ArrayList<>();
     static ArrayList<Pajaro> basePajaros = new ArrayList<>();
+    static ArrayList<Venta> baseVentas = new ArrayList<>();
 
     public static void main(String[] args) {
-        baseClientes.add(new Cliente("Jose", "45454545f",  "654455445", "jose@g.com"));
-        baseClientes.add(new Cliente("Juan", "45454545s",  "655555555", "juan@g.com"));
+        baseClientes.add(new Cliente("JUAN","45454545F", "654454545", "juan@g.com"));
 
         basePajaros.add(new Pajaro("Loro", "Verde", 56.32));
         basePajaros.add(new Pajaro("Canario", "Amarillo", 24.50));
-        basePajaros.add(new Pajaro("Periquito", "Azul", 18.75));
-        basePajaros.add(new Pajaro("Cotorra", "Rojo", 30.00));
-        basePajaros.add(new Pajaro("Jilguero", "Naranja", 22.40));
-        basePajaros.add(new Pajaro("Agapornis", "Verde", 35.60));
 
         while (estaFuncionando){
             Mensajes.menuInicial();
@@ -50,11 +46,8 @@ public class SistemaGestionPajareria {
         switch (opc){
             case 1 -> ejecutarMenuCliente();
             case 2 -> ejecutarMenuPajaros();
-            case 3 -> {
-                crearVenta();
-                return true;
-            }
-            case 4 -> System.out.println("4");
+            case 3 -> crearVenta();
+            case 4 -> ejecutarMenuVentasTotales();
             case 5 -> {
                 Mensajes.saliendo();
                 return false;
@@ -443,6 +436,7 @@ public class SistemaGestionPajareria {
                 seguirAgregando = seguirModificandoProbando();
             }
             Mensajes.compraTotal(venta);
+            baseVentas.add(venta);
         }
 
         if(cliente == null){
@@ -452,6 +446,71 @@ public class SistemaGestionPajareria {
             if (resp){
                agregarCliente();
             }
+        }
+    }
+    /* ============== Mostrar Ventas ============== */
+    public static void ejecutarMenuVentasTotales(){
+        if (!baseVentas.isEmpty()){
+            Mensajes.menuMostarVentas();
+            int opc = elegir_opcion(4);
+
+            while (opc == -1) {
+                Mensajes.menuClientes();
+                opc = elegir_opcion(4);
+            }
+
+            switch (opc) {
+                case 1 -> mostrarVentasTotales();
+                case 2 -> mostrarVentasTotalesPorCliente();
+                case 3 -> mostrarImporteTotalPorVenta();
+                case 4 -> {
+                    return;
+                }
+            }
+            seguirMenuMostrarVentas();
+        }else{
+            Mensajes.noHayVentas();
+        }
+    }
+
+    public static void mostrarVentasTotales(){
+        for (Venta venta: baseVentas){
+            Mensajes.mostrarVentasTotales(venta);
+        }
+    }
+
+    public static void mostrarVentasTotalesPorCliente(){
+        String dni = ingresarDni();
+        Cliente cliente = buscarPorDni(dni);
+        
+        if(cliente != null){
+            for (Venta venta: baseVentas){
+                if (venta.getCliente().getDni().equals(cliente.getDni())){
+                    Mensajes.mostrarVentasTotales(venta);
+                }
+            }   
+        }else{
+            Mensajes.clienteNoExiste();
+        }
+        
+    }
+
+    public static void mostrarImporteTotalPorVenta(){
+        int contador = 1;
+        for (Venta venta: baseVentas){
+            Mensajes.mensajeContador(contador++);
+            double total = 0.00;
+            for (Pajaro pajaro: venta.getLineasDeVenta()) {
+                total += pajaro.getPrecio();
+            }
+            Mensajes.mensajeTotalVenta(total);
+        }
+    }
+
+    public static void seguirMenuMostrarVentas(){
+        Mensajes.mensajeVolverMenuVentasTotales();
+        if (seguirModificandoProbando()){
+            ejecutarMenuVentasTotales();
         }
     }
 
