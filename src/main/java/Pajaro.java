@@ -35,6 +35,6 @@ public class Pajaro {
 
     @Override
     public String toString() {
-        return "Especie pájaro: " + this.getEspecie() + ", color: " + this.getColor() + ", precio: " + this.getPrecio();
+        return "Especie: " + this.getEspecie() + ", color: " + this.getColor() + ", precio: " + this.getPrecio();
     }
 }

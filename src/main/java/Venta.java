@@ -47,14 +47,14 @@ public class Venta {
         pajarosComprados = pajarosComprados.substring(0, pajarosComprados.length()- 2);
 
         return """
+                
                 -----------------------------
                 Venta:
-                        Cliente: %s
-                        Pájaros: %s
-                        Total: %.2f
+                    Cliente: %s
+                    Pájaros: %s
+                    Total: %.2f€
                 ------------------------------
                 Fecha: %s
-                -----------------------------
-                """.formatted(this.cliente.getNombre(), pajarosComprados, total, this.fecha);
+                -----------------------------""".formatted(this.cliente.getNombre(), pajarosComprados, total, this.fecha);
     }
 }

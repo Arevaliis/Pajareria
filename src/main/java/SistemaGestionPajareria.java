@@ -50,7 +50,10 @@ public class SistemaGestionPajareria {
         switch (opc){
             case 1 -> ejecutarMenuCliente();
             case 2 -> ejecutarMenuPajaros();
-            case 3 -> crearVenta();
+            case 3 -> {
+                crearVenta();
+                return true;
+            }
             case 4 -> System.out.println("4");
             case 5 -> {
                 Mensajes.saliendo();
@@ -116,7 +119,7 @@ public class SistemaGestionPajareria {
         while (true){
             try {
                 Mensajes.mensajeNombre();
-                String nombre = scanner.nextLine().trim();
+                String nombre = scanner.nextLine().trim().toUpperCase();
                 Validador.validandoNombre(nombre);
                 return nombre;
             } catch (ErrorIngresoNombreException e) {
@@ -129,7 +132,7 @@ public class SistemaGestionPajareria {
         while (true){
             try {
                 Mensajes.mensajeDni();
-                String dni = scanner.nextLine().trim();
+                String dni = scanner.nextLine().trim().toUpperCase();
                 Validador.valindandoDni(dni);
                 return dni;
             } catch (ErrorIngresoDniException e) {
@@ -329,7 +332,7 @@ public class SistemaGestionPajareria {
         while (true){
             try {
                 Mensajes.mensajeEspecie();
-                String especie = scanner.nextLine().trim();
+                String especie = scanner.nextLine().trim().toUpperCase();
                 Validador.validandoNombre(especie);
                 return especie;
             }catch (ErrorIngresoNombreException e){
@@ -418,7 +421,7 @@ public class SistemaGestionPajareria {
         }
     }
 
-    /* ============== Ventas ============== */
+    /* ============== Venta ============== */
     public static void crearVenta(){
         String dni = ingresarDni();
         Cliente cliente = buscarPorDni(dni);
@@ -430,13 +433,24 @@ public class SistemaGestionPajareria {
             boolean seguirAgregando = true;
 
             while (seguirAgregando){
+                Mensajes.saltoLinea();
                 listarPajaros();
-                Mensajes.comprarPajaro(); // Cambiarlo por menu especies
-                String especie = ingresarEspecie();
+                Mensajes.comprarPajaro();
                 Pajaro pajaro = busquedaPorEspecie();
+                venta.getLineasDeVenta().add(pajaro);
 
                 Mensajes.volverComprarPajaro();
                 seguirAgregando = seguirModificandoProbando();
+            }
+            Mensajes.compraTotal(venta);
+        }
+
+        if(cliente == null){
+            Mensajes.clienteNoExiste();
+            Mensajes.agregarClienteDuranteCompra();
+            boolean resp = seguirModificandoProbando();
+            if (resp){
+               agregarCliente();
             }
         }
     }

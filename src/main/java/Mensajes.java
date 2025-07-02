@@ -175,9 +175,21 @@ public class Mensajes {
         System.out.println("No se ha encontrado ningún pájaro de esa especie.");
     }
     public static void comprarPajaro(){
-        System.out.print("\n¿Que pájaro quiere comprar?: ");
+        System.out.print("\n¿Que pájaro quiere comprar?. ");
     }
     public static void volverComprarPajaro(){
-        System.out.print("\n¿Desea agregar otro pájaro?: ");
+        System.out.print("\n¿Desea agregar otro pájaro? (S/N): ");
+    }
+
+    public static void compraTotal(Venta venta){
+        System.out.println(venta);
+    }
+
+    public static void agregarClienteDuranteCompra(){
+        System.out.print("\n¿Desea agregarlo? (S/N): ");
+    }
+
+    public static void saltoLinea(){
+        System.out.println();
     }
 }
