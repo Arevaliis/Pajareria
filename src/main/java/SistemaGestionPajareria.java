@@ -71,10 +71,10 @@ public class SistemaGestionPajareria {
             case 4 -> {
                 if (baseClientes.isEmpty()) {
                 Mensajes.baseDatosVacia();
-                return;
+                break;
                 }
 
-                while (true){
+                do {
                     String dni = ingresarDni();
                     Cliente cliente = buscarPorDni(dni);
                     if (cliente == null) {
@@ -82,10 +82,7 @@ public class SistemaGestionPajareria {
                     }
 
                     Mensajes.buscarDeNuevo();
-                    if (!seguirModificandoProbando()){
-                        return;
-                    }
-                }
+                } while (seguirModificandoProbando());
 
             }
             case 5 -> listarClientes();
@@ -97,7 +94,7 @@ public class SistemaGestionPajareria {
         seguirMenuClientes();
     }
 
-    public static Cliente buscarPorDni(String dni){ // No vuelve menu clientes
+    public static Cliente buscarPorDni(String dni){
         if (!baseClientes.isEmpty()) {
             for (Cliente cliente : baseClientes) {
                 if (cliente.getDni().equalsIgnoreCase(dni)) {
@@ -300,7 +297,7 @@ public class SistemaGestionPajareria {
         }
     }
 
-    /* ============== Pajaros ============== */
+    /* ============== Pájaros ============== */
     public static void ejecutarMenuPajaros(){
         Mensajes.menuPajaros();
         int opc = elegir_opcion(4);
