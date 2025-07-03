@@ -4,6 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// TODO DOBLE ENTER
+// TODO Mostrar importe total de ventas por cliente
+// TODO Gestión de stock (disminuir cantidad de pájaros disponibles al vender)
+// TODO Ordenar clientes o pájaros por campos (por nombre, especie, etc.)
+
 public class SistemaGestionPajareria {
     static Scanner scanner = new Scanner(System.in);
     static boolean estaFuncionando = true;
@@ -13,7 +18,6 @@ public class SistemaGestionPajareria {
 
     public static void main(String[] args) {
 
-        baseClientes.add(new Cliente("JUAN","45454545F", "654454545", "juan@g.com"));
         basePajaros.add(new Pajaro("Loro", "Verde", 56.32));
         basePajaros.add(new Pajaro("Canario", "Amarillo", 24.50));
 
@@ -56,61 +60,56 @@ public class SistemaGestionPajareria {
         return seguir();
     }
 
-    /* ============== Clientes ============== */
-    public static void ejecutarMenuCliente(){
-        if (!baseClientes.isEmpty()){
+    /* ============== Clientes ============ */
+    public static void ejecutarMenuCliente() {
+        int opc;
+        do {
             Mensajes.menuClientes();
-            int opc = elegir_opcion(6);
+            opc = elegir_opcion(6);
+            opcionElegidaClientes(opc);
+            seguirMenuClientes(opc);
+        } while (opc == -1);
+    }
 
-            while (opc == -1) {
-                Mensajes.menuClientes();
-                opc = elegir_opcion(6);
-            }
-
-            switch (opc) {
-                case 1 -> agregarCliente();
-                case 2 -> eliminarCliente();
-                case 3 -> modificarCliente();
-                case 4 -> {
-                    if (baseClientes.isEmpty()) {
-                        Mensajes.baseDatosVacia();
-                        break;
-                    }
-
-                    do {
+    public static void opcionElegidaClientes(int opc){
+        if (baseClientes.isEmpty() && opc != 1 && opc != 6 ){
+            Mensajes.baseDatosVacia();
+        } else {
+            do {
+                switch (opc) {
+                    case 1 -> agregarCliente();
+                    case 2 -> eliminarCliente();
+                    case 3 -> modificarCliente();
+                    case 4 -> {
                         String dni = ingresarDni();
                         Cliente cliente = buscarPorDni(dni);
                         if (cliente == null) {
                             Mensajes.clienteNoExiste();
                         }
-
                         Mensajes.buscarDeNuevo();
-                    } while (seguirModificandoProbando());
-
+                    }
+                    case 5 -> {
+                        listarClientes();
+                        return;
+                    }
+                    case 6 -> {
+                        return;
+                    }
                 }
-                case 5 -> listarClientes();
-                case 6 -> {
-                    return;
-                }
-            }
-            seguirMenuClientes();
-        }else{
-            Mensajes.noHayClientes();
-            agregarCliente();
-            ejecutarMenuCliente();
+            } while (seguirModificandoProbando());
         }
     }
 
     public static Cliente buscarPorDni(String dni){
-        Cliente c = null;
+        Cliente cliente = null;
 
-        for (Cliente cliente : baseClientes) {
-            if (cliente.getDni().equalsIgnoreCase(dni)) {
-                Mensajes.mostarCliente(cliente);
-                c = cliente;
+        for (Cliente usuario : baseClientes) {
+            if (usuario.getDni().equalsIgnoreCase(dni)) {
+                Mensajes.mostarCliente(usuario);
+                cliente = usuario;
             }
         }
-        return c;
+        return cliente;
     }
 
     public static String ingresarNombre(){
@@ -126,11 +125,12 @@ public class SistemaGestionPajareria {
         }
     }
 
-    public static String ingresarDni(){
-        while (true){
+    public static String ingresarDni() {
+        String dni;
+        while (true) {
             try {
                 Mensajes.mensajeDni();
-                String dni = scanner.nextLine().trim().toUpperCase();
+                dni = scanner.nextLine().trim().toUpperCase();
                 Validador.valindandoDni(dni);
                 return dni;
             } catch (ErrorIngresoDniException e) {
@@ -139,139 +139,144 @@ public class SistemaGestionPajareria {
         }
     }
 
-    public static String ingresarTelefono(){
-        while (true){
-            boolean estaRepetido = false;
-            try {
-                Mensajes.mensajeTelefono();
-                String telefono = scanner.nextLine().trim();
-                Validador.validandoTelefono(telefono);
-                for (Cliente cliente: baseClientes){
-                    if (cliente.getTelefono().equalsIgnoreCase(telefono)){
-                        Mensajes.telefonoRepetido();
-                        estaRepetido = true;
-                        break;
-                    }
-                }
-
-                 if (!estaRepetido){
-                     return telefono;
-                 }
-
-            } catch (ErrorIngresoTelefonoException e) {
-                System.out.println(e.getMessage());
+    public static boolean comprobarDuplicidadDni(String dni) {
+        for (Cliente cliente : baseClientes) {
+            if (cliente.getDni().equalsIgnoreCase(dni)) {
+                Mensajes.yaExisteDni();
+                return false;
             }
         }
+        return true;
+    }
+
+    public static String ingresarTelefono() {
+        String telefono;
+        while (true) {
+            try {
+                Mensajes.mensajeTelefono();
+                telefono = scanner.nextLine().trim();
+                Validador.validandoTelefono(telefono);
+            } catch (ErrorIngresoTelefonoException e) {
+                System.out.println(e.getMessage());
+                continue;
+            }
+            if (comprobarDuplicidadTelefono(telefono)) {
+                return telefono;
+            }
+        }
+    }
+
+    public static boolean comprobarDuplicidadTelefono(String telefono) {
+        for (Cliente cliente : baseClientes) {
+            if (cliente.getTelefono().equalsIgnoreCase(telefono)) {
+                Mensajes.telefonoRepetido();
+                return false;
+            }
+        }
+        return true;
     }
 
     public static String ingresarEmail(){
+        String email;
         while (true){
-            boolean estaRepetido = false;
             try {
                 Mensajes.mensajeEmail();
-                String email = scanner.nextLine().trim();
+                email = scanner.nextLine().trim();
                 Validador.validandoEmail(email);
-                for (Cliente cliente: baseClientes){
-                    if (cliente.getEmail().equalsIgnoreCase(email)){
-                        Mensajes.emailRepetido();
-                        estaRepetido = true;
-                        break;
-                    }
-                }
-
-                if (!estaRepetido){
-                    return email;
-                }
-
             } catch (ErrorIngresoEmailException e) {
                 System.out.println(e.getMessage());
+                continue;
+            }
+            if (comprobarDuplicidadEmail(email)){
+                return email;
             }
         }
+    }
+
+    public static boolean comprobarDuplicidadEmail(String email){
+        for (Cliente cliente: baseClientes){
+            if (cliente.getEmail().equalsIgnoreCase(email)){
+                Mensajes.emailRepetido();
+                return false;
+            }
+        }
+        return true;
     }
 
     public static void agregarCliente(){
-        boolean seguirProbando = true;
-
-        while(seguirProbando){
-            String dni = ingresarDni();
-            if (buscarPorDni(dni) == null){
-                Cliente cliente = new Cliente(ingresarNombre(), dni, ingresarTelefono(), ingresarEmail());
-                baseClientes.add(cliente);
-                Mensajes.clienteAgregado();
-                Mensajes.agregarOtroCliente();
-            }else{
-                Mensajes.yaExisteDni();
-                Mensajes.probarNuevamente();
-            }
-            seguirProbando = seguirModificandoProbando();
+        String dni = ingresarDni();
+        if (buscarPorDni(dni) == null){
+            Cliente cliente = new Cliente(ingresarNombre(), dni, ingresarTelefono(), ingresarEmail());
+            baseClientes.add(cliente);
+            Mensajes.clienteAgregado();
+        }else{
+            Mensajes.yaExisteDni();
         }
+        Mensajes.ingresarNuevoCliente();
     }
 
     public static void  eliminarCliente(){
-        boolean seguirProbando = true;
+        String dni = ingresarDni();
+        Cliente cliente = buscarPorDni(dni);
 
-        while(seguirProbando){
-            String dni = ingresarDni();
-            Cliente cliente = buscarPorDni(dni);
+        if (cliente != null){
+            confirmarEliminacion(cliente);
+        }else{
+            Mensajes.clienteNoExiste();
+        }
+        Mensajes.ingresarOtroDni();
+    }
 
-            if (cliente != null){
-                Mensajes.confirmarEliminacion();
-                if (seguirModificandoProbando()){
-                    baseClientes.remove(cliente);
-                    Mensajes.clienteEliminado();
-                }
-            }else{
-                    Mensajes.clienteNoExiste();
-            }
-            Mensajes.ingresarOtroDni();
-            seguirProbando = seguirModificandoProbando();
+    public static void confirmarEliminacion(Cliente cliente){
+        Mensajes.confirmarEliminacion();
+        if (seguirModificandoProbando()){
+            baseClientes.remove(cliente);
+            Mensajes.clienteEliminado();
         }
     }
 
     public static void modificarCliente(){
-        boolean seguirModificando = true;
         String dni = ingresarDni();
+        Cliente cliente = buscarPorDni(dni);
 
-        while (seguirModificando){
-            Cliente cliente = buscarPorDni(dni);
-            if (cliente != null){
-                Mensajes.menuModificarValores();
-                int opc = elegir_opcion(5);
-                switch (opc){
-                    case 1 -> {
-                        String nombre = ingresarNombre();
-                        cliente.setNombre(nombre);
-                    }
-                    case 2 ->{
-                        String dniNuevo = ingresarDni();
-                        if (buscarPorDni(dniNuevo) == null){
-                            cliente.setDni(dniNuevo);
-                        }else{
-                            Mensajes.yaExisteDni();
-                        }
-                    }
-                    case 3 ->{
-                        String telefono = ingresarTelefono();
-                        cliente.setTelefono(telefono);
-                    }
-                    case 4 -> {
-                        String email = ingresarEmail();
-                        cliente.setEmail(email);
-                    }
-                    case 5 -> {
-                        return;
+        if (cliente != null){
+            Mensajes.menuModificarValores();
+            int opc = elegir_opcion(5);
+            switch (opc){
+                case 1 -> confirmarCambio("NOMBRE", cliente, ingresarNombre(), cliente.getNombre());
+                case 2 -> {
+                    String nuevoDni = ingresarDni();
+                    if (comprobarDuplicidadDni(nuevoDni)) {
+                        confirmarCambio("DNI", cliente, nuevoDni, cliente.getDni());
                     }
                 }
-                Mensajes.modifcarAlgoMas();
-                seguirModificando = seguirModificandoProbando();
-            }else{
-                Mensajes.clienteNoExiste();
-                Mensajes.probarNuevamente();
-                if (!seguirModificandoProbando()){
-                    return;
-                }
-                dni = ingresarDni();
+                case 3 -> confirmarCambio("TELEFONO", cliente, ingresarTelefono(), cliente.getTelefono());
+                case 4 -> confirmarCambio("EMAIL", cliente, ingresarEmail(), cliente.getEmail());
+                case 5 -> { return; }
             }
+        }else{
+            Mensajes.clienteNoExiste();
+        }
+        continuarModificando();
+    }
+
+    public static void confirmarCambio(String campo, Cliente cliente, String valorNuevo, String valorAntiguo){
+        Mensajes.modificarCampo(campo);
+        if (seguirModificandoProbando()){
+            switch (campo){
+                case "NOMBRE" -> cliente.setNombre(valorNuevo);
+                case "DNI" -> cliente.setDni(valorNuevo);
+                case "TELEFONO" -> cliente.setTelefono(valorNuevo);
+                case "EMAIL" -> cliente.setEmail(valorNuevo);
+            }
+            Mensajes.campoModificado(campo, valorNuevo, valorAntiguo);
+        }
+    }
+
+    public static void continuarModificando(){
+        Mensajes.modifcarAlgoMas();
+        if (seguirModificandoProbando()){
+            modificarCliente();
         }
     }
 
@@ -281,10 +286,12 @@ public class SistemaGestionPajareria {
         }
     }
 
-    public static void seguirMenuClientes(){
-        Mensajes.mensajeVolverMenuClientes();
-        if (seguirModificandoProbando()){
-            ejecutarMenuCliente();
+    public static void seguirMenuClientes(int opc){
+        if (opc != 6){
+            Mensajes.mensajeVolverMenuClientes();
+            if (seguirModificandoProbando()){
+                ejecutarMenuCliente();
+            }
         }
     }
 
