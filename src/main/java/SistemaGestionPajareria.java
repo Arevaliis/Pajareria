@@ -4,11 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// TODO DOBLE ENTER
-// TODO Mostrar importe total de ventas por cliente
-// TODO Gestión de stock (disminuir cantidad de pájaros disponibles al vender)
-// TODO Ordenar clientes o pájaros por campos (por nombre, especie, etc.)
-
 public class SistemaGestionPajareria {
     static Scanner scanner = new Scanner(System.in);
     static boolean estaFuncionando = true;
@@ -46,7 +41,7 @@ public class SistemaGestionPajareria {
         switch (opc){
             case 1 -> ejecutarMenuCliente();
             case 2 -> ejecutarMenuPajaros();
-            case 3 -> crearVenta();
+            case 3 -> iniciarVenta();
             case 4 -> ejecutarMenuVentasTotales();
             case 5 -> {
                 Mensajes.saliendo();
@@ -408,49 +403,52 @@ public class SistemaGestionPajareria {
     }
 
     /* ============== Venta ============== */
-    public static boolean comprobarBasesVacias(){
-        if (baseClientes.isEmpty()) {
-            Mensajes.vacioBaseClienteDuranteCompra();
-            return true;
-        }
 
-        if (basePajaros.isEmpty()){
-            Mensajes.vacioBasePajarosDuranteCompra();
-            return true;
+    public static void iniciarVenta(){
+        try {
+            Validador.validandoBaseClientes(baseClientes);
+            Validador.validandoBasPajaros(basePajaros);
+            String dni = ingresarDni();
+            Cliente cliente = buscarPorDni(dni);
+            Validador.validandoExistenciaCliente(cliente);
+            crearVenta(new Venta(cliente, new ArrayList<>(), obtenerFecha()));
+        }catch (ErrorBaseDatosClientesVacia | ErrorBaseDatosPajarosVacia | ErrorClienteNoExiste e){
+            System.out.println(e.getMessage());
         }
-        return false;
     }
 
-    public static void crearVenta(){
-        if (comprobarBasesVacias()){
-            return;
-        }
+    public static void crearVenta(Venta venta){
+        boolean seguirAgregando = true;
 
-        String dni = ingresarDni();
-        Cliente cliente = buscarPorDni(dni);
+        while (seguirAgregando){
+            Mensajes.tituloEspecies();
+            listarPajaros();
+            Mensajes.comprarPajaro();
+            Pajaro pajaro = busquedaPorEspecie();
 
-        if(cliente == null){
-            Mensajes.clienteNoExiste();
-        } else{
-            LocalDate date = LocalDate.now();
-            String hoy = String.valueOf(date);
-            Venta venta = new Venta(cliente, new ArrayList<>(), hoy);
-            boolean seguirAgregando = true;
-
-            while (seguirAgregando){
-                Mensajes.saltoLinea();
-                listarPajaros();
-                Mensajes.comprarPajaro();
-                Pajaro pajaro = busquedaPorEspecie();
-
-                if (pajaro != null){
-                    venta.getLineasDeVenta().add(pajaro);
-                    Mensajes.volverComprarPajaro();
-                    seguirAgregando = seguirModificandoProbando();
-                }
+            if (pajaro != null){
+                venta.getLineasDeVenta().add(pajaro);
+            }else{
+                Mensajes.noExistePajaro();
             }
+
+            Mensajes.volverComprarPajaro();
+            seguirAgregando = seguirModificandoProbando();
+        }
+        imprimirTicket(venta);
+    }
+
+    public static String obtenerFecha(){
+        LocalDate date = LocalDate.now();
+        return String.valueOf(date);
+    }
+
+    public static void imprimirTicket(Venta venta){
+        if (!venta.getLineasDeVenta().isEmpty()){
             Mensajes.compraTotal(venta);
             baseVentas.add(venta);
+        }else{
+            Mensajes.cestaVacia();
         }
     }
 
@@ -488,17 +486,15 @@ public class SistemaGestionPajareria {
     public static void mostrarVentasTotalesPorCliente(){
         String dni = ingresarDni();
         Cliente cliente = buscarPorDni(dni);
-        
-        if(cliente != null){
+
+        if (cliente != null){
             for (Venta venta: baseVentas){
                 if (venta.getCliente().getDni().equals(cliente.getDni())){
                     Mensajes.mostrarVentasTotales(venta);
                 }
-            }   
-        }else{
-            Mensajes.clienteNoExiste();
+            }
         }
-        
+        Mensajes.clienteNoExiste();
     }
 
     public static void mostrarImporteTotalPorVenta(){
