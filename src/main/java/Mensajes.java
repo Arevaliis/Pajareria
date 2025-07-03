@@ -91,7 +91,7 @@ public class Mensajes {
         System.out.print("\n¿Desea ingresar otro DNI? (S/N): ");
     }
 
-    public static void baseDatosVacia(){
+    public static void baseClientesVacia(){
         System.out.println("Base de datos clientes vacía.");
     }
 
@@ -127,7 +127,7 @@ public class Mensajes {
         System.out.println(cliente);
     }
 
-    public static void buscarDeNuevo(){
+    public static void buscarDeNuevoCliente(){
         System.out.print("\n¿Desea buscar otro cliente por DNI? (S/N): ");
     }
 
@@ -159,6 +159,10 @@ public class Mensajes {
 
     public static void noHayClientes(){
         System.out.println("No es posible acceder a la sección de clientes porque aún no se ha realizado ninguna.");
+    }
+
+    public static void basePajarosVacia(){
+        System.out.println("La base de datos de pájaros esta vacía.");
     }
 
     public static void mensajeVolverMenuPajaros(){
