@@ -119,8 +119,8 @@ public class Mensajes {
         System.out.println("Error: Ya existe un cliente con ese número de teléfono.\n");
     }
 
-    public static void probarNuevamente(){
-        System.out.print("\n¿Desea intentarlo de nuevo? (S/N): ");
+    public static void ingresarNuevoCliente(){
+        System.out.print("\n¿Desea ingresar un nuevo cliente? (S/N): ");
     }
 
     public static void mostarCliente(Cliente cliente){
@@ -135,8 +135,18 @@ public class Mensajes {
         System.out.print("\n¿Está seguro de que desea eliminar este cliente? (S/N): ");
     }
 
+    public static void modificarCampo(String campo){
+        System.out.print("\n¿Está seguro de que desea modificar el campo " + campo + " de este cliente? (S/N): ");
+    }
+
+
+    public static void campoModificado(String campo, String valorNuevo, String valorAntiguo){
+        System.out.println("El " + campo + " ha sido modificado de " + valorAntiguo + " a " + valorNuevo);
+    }
+
+
     public static void modifcarAlgoMas(){
-        System.out.print("\n¿Desea modificar otro dato de este cliente? (S/N): ");
+        System.out.print("\n¿Desea modificar otro dato de algún cliente? (S/N): ");
     }
 
     public static void mensajeVolverMenu(){
