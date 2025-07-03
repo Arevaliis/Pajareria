@@ -83,10 +83,6 @@ public class Mensajes {
         System.out.println("Cliente eliminado exitosamente.");
     }
 
-    public static void agregarOtroCliente(){
-        System.out.print("\n¿Desea agregar otro cliente? (S/N): ");
-    }
-
     public static void ingresarOtroDni(){
         System.out.print("\n¿Desea ingresar otro DNI? (S/N): ");
     }
@@ -157,9 +153,6 @@ public class Mensajes {
         System.out.print("\n¿Desea volver al menú de gestión de clientes? (S/N): ");
     }
 
-    public static void noHayClientes(){
-        System.out.println("No es posible acceder a la sección de clientes porque aún no se ha realizado ninguna.");
-    }
 
     public static void basePajarosVacia(){
         System.out.println("La base de datos de pájaros esta vacía.");
@@ -211,24 +204,17 @@ public class Mensajes {
         System.out.print("\n¿Desea agregar otro pájaro? (S/N): ");
     }
 
-    public static void noHayPajaros(){
-        System.out.println("No es posible acceder a la sección de pájaros porque aún no se ha realizado ninguna.");
-    }
-
-    public static void vacioBasePajarosDuranteCompra(){
-        System.out.print("\nHay 0 pájaros agregados. Debe ingresar alguna especie para poder hacer una venta.");
-    }
-
     public static void compraTotal(Venta venta){
         System.out.println(venta);
     }
 
-    public static void vacioBaseClienteDuranteCompra(){
-        System.out.print("\nHay 0 clientes agregados. Debe dar de alta a un cliente para poder hacer una venta. ");
+    public static void tituloEspecies(){
+        System.out.println("\n----- Inventario -----");
     }
 
-    public static void saltoLinea(){
-        System.out.println();
+    public static void cestaVacia(){
+        System.out.println("No ha añadido ningún producto a la cesta. La operación se cancelará.");
+
     }
 
     public static void mensajeVolverMenuVentasTotales(){
