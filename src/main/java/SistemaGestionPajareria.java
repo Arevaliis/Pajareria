@@ -92,7 +92,7 @@ public class SistemaGestionPajareria {
                     return;
                 }
             }
-        } while (seguirModificandoProbando());
+        } while (deseaRepetirAccion());
     }
 
     public static Cliente buscarPorDni(String dni){
@@ -224,7 +224,7 @@ public class SistemaGestionPajareria {
 
     public static void confirmarEliminacion(Cliente cliente){
         Mensajes.confirmarEliminacion();
-        if (seguirModificandoProbando()){
+        if (deseaRepetirAccion()){
             baseClientes.remove(cliente);
             Mensajes.clienteEliminado();
         }
@@ -257,7 +257,7 @@ public class SistemaGestionPajareria {
 
     public static void confirmarCambio(String campo, Cliente cliente, String valorNuevo, String valorAntiguo){
         Mensajes.modificarCampo(campo);
-        if (seguirModificandoProbando()){
+        if (deseaRepetirAccion()){
             switch (campo){
                 case "NOMBRE" -> cliente.setNombre(valorNuevo);
                 case "DNI" -> cliente.setDni(valorNuevo);
@@ -270,7 +270,7 @@ public class SistemaGestionPajareria {
 
     public static void continuarModificando(){
         Mensajes.modifcarAlgoMas();
-        if (seguirModificandoProbando()){
+        if (deseaRepetirAccion()){
             modificarCliente();
         }
     }
@@ -284,7 +284,7 @@ public class SistemaGestionPajareria {
     public static void seguirMenuClientes(int opc){
         if (opc != 6){
             Mensajes.mensajeVolverMenuClientes();
-            if (seguirModificandoProbando()){
+            if (deseaRepetirAccion()){
                 ejecutarMenuCliente();
             }
         }
@@ -328,7 +328,7 @@ public class SistemaGestionPajareria {
                     return;
                 }
             }
-        } while (seguirModificandoProbando());
+        } while (deseaRepetirAccion());
     }
 
     public static String ingresarEspecie(){
@@ -396,7 +396,7 @@ public class SistemaGestionPajareria {
     public static void seguirMenuPajaros(int opc){
         if (opc != 4){
             Mensajes.mensajeVolverMenuPajaros();
-            if (seguirModificandoProbando()){
+            if (deseaRepetirAccion()){
                 ejecutarMenuPajaros();
             }
         }
@@ -433,7 +433,7 @@ public class SistemaGestionPajareria {
             }
 
             Mensajes.volverComprarPajaro();
-            seguirAgregando = seguirModificandoProbando();
+            seguirAgregando = deseaRepetirAccion();
         }
         imprimirTicket(venta);
     }
@@ -459,7 +459,7 @@ public class SistemaGestionPajareria {
             int opc = elegir_opcion(4);
 
             while (opc == -1) {
-                Mensajes.menuClientes();
+                Mensajes.menuMostarVentas();
                 opc = elegir_opcion(4);
             }
 
@@ -493,8 +493,9 @@ public class SistemaGestionPajareria {
                     Mensajes.mostrarVentasTotales(venta);
                 }
             }
+        }else{
+            Mensajes.clienteNoExiste();
         }
-        Mensajes.clienteNoExiste();
     }
 
     public static void mostrarImporteTotalPorVenta(){
@@ -511,7 +512,7 @@ public class SistemaGestionPajareria {
 
     public static void seguirMenuMostrarVentas(){
         Mensajes.mensajeVolverMenuVentasTotales();
-        if (seguirModificandoProbando()){
+        if (deseaRepetirAccion()){
             ejecutarMenuVentasTotales();
         }
     }
@@ -520,14 +521,14 @@ public class SistemaGestionPajareria {
 
     public static boolean seguir(){
         Mensajes.mensajeVolverMenu();
-        if (!seguirModificandoProbando()){
+        if (!deseaRepetirAccion()){
             Mensajes.saliendo();
             return false;
         }
         return true;
     }
 
-    public static boolean seguirModificandoProbando(){
+    public static boolean deseaRepetirAccion(){
         return scanner.nextLine().trim().equalsIgnoreCase("S");
     }
 }

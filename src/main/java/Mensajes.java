@@ -67,16 +67,54 @@ public class Mensajes {
         System.out.println("\nSaliendo...");
     }
 
+    /* ======================= Mensajes de Clientes ======================= */
+
     public static void clienteNoExiste(){
         System.out.println("No se ha encontrado ningún cliente con ese DNI.");
+    }
+
+    public static void buscarDeNuevoCliente(){
+        System.out.print("\n¿Desea buscar otro cliente por DNI? (S/N): ");
+    }
+
+    public static void mensajeNombre(){
+        System.out.print("Ingrese el nombre del cliente: ");
+    }
+
+    public static void mensajeDni(){
+        System.out.print("Ingrese el DNI del cliente: ");
     }
 
     public static void yaExisteDni(){
         System.out.println("Error: Ya existe un cliente registrado con ese DNI.");
     }
 
+    public static void mensajeTelefono(){
+        System.out.print("Ingrese el número de teléfono del cliente: ");
+    }
+
+    public static void telefonoRepetido(){
+        System.out.println("Error: Ya existe un cliente con ese número de teléfono.\n");
+    }
+
+    public static void mensajeEmail(){
+        System.out.print("Ingrese el correo electrónico del cliente: ");
+    }
+
+    public static void  emailRepetido(){
+        System.out.println("Error: Ya existe un cliente con ese correo electrónico.\n");
+    }
+
     public static void clienteAgregado(){
         System.out.println("Cliente registrado correctamente.");
+    }
+
+    public static void ingresarNuevoCliente(){
+        System.out.print("\n¿Desea ingresar un nuevo cliente? (S/N): ");
+    }
+
+    public static void confirmarEliminacion(){
+        System.out.print("\n¿Está seguro de que desea eliminar este cliente? (S/N): ");
     }
 
     public static void clienteEliminado(){
@@ -91,58 +129,20 @@ public class Mensajes {
         System.out.println("Base de datos clientes vacía.");
     }
 
-    public static void mensajeNombre(){
-        System.out.print("Ingrese el nombre del cliente: ");
-    }
-
-    public static void mensajeDni(){
-        System.out.print("Ingrese el DNI del cliente: ");
-    }
-
-    public static void mensajeTelefono(){
-        System.out.print("Ingrese el número de teléfono del cliente: ");
-    }
-
-    public static void mensajeEmail(){
-        System.out.print("Ingrese el correo electrónico del cliente: ");
-    }
-
-    public static void  emailRepetido(){
-        System.out.println("Error: Ya existe un cliente con ese correo electrónico.\n");
-    }
-
-    public static void telefonoRepetido(){
-        System.out.println("Error: Ya existe un cliente con ese número de teléfono.\n");
-    }
-
-    public static void ingresarNuevoCliente(){
-        System.out.print("\n¿Desea ingresar un nuevo cliente? (S/N): ");
-    }
-
-    public static void mostarCliente(Cliente cliente){
-        System.out.println(cliente);
-    }
-
-    public static void buscarDeNuevoCliente(){
-        System.out.print("\n¿Desea buscar otro cliente por DNI? (S/N): ");
-    }
-
-    public static void confirmarEliminacion(){
-        System.out.print("\n¿Está seguro de que desea eliminar este cliente? (S/N): ");
-    }
-
     public static void modificarCampo(String campo){
         System.out.print("\n¿Está seguro de que desea modificar el campo " + campo + " de este cliente? (S/N): ");
     }
-
 
     public static void campoModificado(String campo, String valorNuevo, String valorAntiguo){
         System.out.println("El " + campo + " ha sido modificado de " + valorAntiguo + " a " + valorNuevo);
     }
 
-
     public static void modifcarAlgoMas(){
         System.out.print("\n¿Desea modificar otro dato de algún cliente? (S/N): ");
+    }
+
+    public static void mostarCliente(Cliente cliente){
+        System.out.println(cliente);
     }
 
     public static void mensajeVolverMenu(){
@@ -154,8 +154,18 @@ public class Mensajes {
     }
 
 
+    /* ======================= Mensajes de Pájaros ======================= */
+
     public static void basePajarosVacia(){
         System.out.println("La base de datos de pájaros esta vacía.");
+    }
+
+    public static void noExistePajaro(){
+        System.out.println("No se ha encontrado ningún pájaro de esa especie.");
+    }
+
+    public static void volverBuscarPajaro(){
+        System.out.print("\n¿Desea realizar otra búsqueda por especie? (S/N): ");
     }
 
     public static void mensajeVolverMenuPajaros(){
@@ -186,20 +196,21 @@ public class Mensajes {
         System.out.println(especie);
     }
 
-    public static void volverBuscarPajaro(){
-        System.out.print("\n¿Desea realizar otra búsqueda por especie? (S/N): ");
-    }
-
     public static void mostrarPajaro(Pajaro pajaro){
         System.out.println(pajaro);
     }
 
-    public static void noExistePajaro(){
-        System.out.println("No se ha encontrado ningún pájaro de esa especie.");
+
+    /* ======================= Mensajes de Hacer Venta ======================= */
+
+    public static void tituloEspecies(){
+        System.out.println("\n----- Inventario -----");
     }
+
     public static void comprarPajaro(){
         System.out.print("\n¿Que pájaro quiere comprar?. ");
     }
+
     public static void volverComprarPajaro(){
         System.out.print("\n¿Desea agregar otro pájaro? (S/N): ");
     }
@@ -208,14 +219,14 @@ public class Mensajes {
         System.out.println(venta);
     }
 
-    public static void tituloEspecies(){
-        System.out.println("\n----- Inventario -----");
-    }
-
     public static void cestaVacia(){
         System.out.println("No ha añadido ningún producto a la cesta. La operación se cancelará.");
 
     }
+
+
+    /* ======================= Mensajes de Mostrar Ventas ======================= */
+
 
     public static void mensajeVolverMenuVentasTotales(){
         System.out.print("\n¿Desea volver al menú de ventas totales? (S/N): ");
