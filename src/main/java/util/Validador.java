@@ -1,4 +1,8 @@
+package util;
+
 import Excepciones.*;
+import modelos.Cliente;
+import modelos.Pajaro;
 
 import java.util.ArrayList;
 import java.util.Arrays;

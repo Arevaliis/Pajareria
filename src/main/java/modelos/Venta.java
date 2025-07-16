@@ -1,8 +1,10 @@
+package modelos;
+
 import java.util.ArrayList;
 
 public class Venta {
     private Cliente cliente;
-    private ArrayList<Pajaro> lineasDeVenta; //Cada venta contiene varios Paj
+    private ArrayList<Pajaro> lineasDeVenta;
     private String fecha;
 
     public Venta(Cliente cliente, ArrayList<Pajaro> lineasDeVenta, String fecha){

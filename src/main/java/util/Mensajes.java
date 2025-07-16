@@ -1,3 +1,7 @@
+package util;
+
+import modelos.*;
+
 public class Mensajes {
     public static void menuInicial(){
         System.out.println("""
@@ -67,7 +71,7 @@ public class Mensajes {
         System.out.println("\nSaliendo...");
     }
 
-    /* ======================= Mensajes de Clientes ======================= */
+    /* ======================= util.Mensajes de Clientes ======================= */
 
     public static void clienteNoExiste(){
         System.out.println("No se ha encontrado ningún cliente con ese DNI.");
@@ -154,7 +158,7 @@ public class Mensajes {
     }
 
 
-    /* ======================= Mensajes de Pájaros ======================= */
+    /* ======================= util.Mensajes de Pájaros ======================= */
 
     public static void basePajarosVacia(){
         System.out.println("La base de datos de pájaros esta vacía.");
@@ -201,7 +205,7 @@ public class Mensajes {
     }
 
 
-    /* ======================= Mensajes de Hacer Venta ======================= */
+    /* ======================= util.Mensajes de Hacer Venta ======================= */
 
     public static void tituloEspecies(){
         System.out.println("\n----- Inventario -----");
@@ -224,8 +228,7 @@ public class Mensajes {
 
     }
 
-
-    /* ======================= Mensajes de Mostrar Ventas ======================= */
+    /* ======================= util.Mensajes de Mostrar Ventas ======================= */
 
 
     public static void mensajeVolverMenuVentasTotales(){
@@ -234,6 +237,10 @@ public class Mensajes {
 
     public static void mostrarVentasTotales(Venta venta){
         System.out.println(venta);
+    }
+
+    public static void clienteNoTieneVentas(){
+        System.out.println("El cliente todavía no ha realizado ninguna compra.");
     }
 
     public static void noHayVentas(){
