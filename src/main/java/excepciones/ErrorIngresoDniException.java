@@ -1,4 +1,4 @@
-package Excepciones;
+package excepciones;
 
 public class ErrorIngresoDniException extends Exception{
     public ErrorIngresoDniException(String mensaje){

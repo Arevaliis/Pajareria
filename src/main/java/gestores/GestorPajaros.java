@@ -1,12 +1,13 @@
-package Gestores;
+package gestores;
 
-import Excepciones.ErrorIngresoColor;
-import Excepciones.ErrorIngresoNombreException;
+import excepciones.ErrorIngresoColor;
+import excepciones.ErrorIngresoNombreException;
 
 import modelos.Pajaro;
 import util.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 // TODO Gestión de stock (disminuir cantidad de pájaros disponibles al vender)
@@ -14,7 +15,13 @@ import java.util.Scanner;
 
 public class GestorPajaros {
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Pajaro> basePajaros = new ArrayList<>();
+    static ArrayList<Pajaro> basePajaros = new ArrayList<>(
+            List.of(
+                    new Pajaro("Canario", "Amarillo", 20.0),
+                    new Pajaro("Periquito", "Verde", 15.5),
+                    new Pajaro("Loro", "Rojo", 120.0)
+            )
+    );
 
     public static void ejecutarMenuPajaros(){
         int opc;

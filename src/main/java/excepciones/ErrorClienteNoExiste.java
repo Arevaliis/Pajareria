@@ -1,4 +1,4 @@
-package Excepciones;
+package excepciones;
 
 public class ErrorClienteNoExiste extends Exception {
     public ErrorClienteNoExiste(String message) {

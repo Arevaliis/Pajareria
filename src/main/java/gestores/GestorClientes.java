@@ -1,11 +1,12 @@
-package Gestores;
+package gestores;
 
-import Excepciones.ErrorIngresoDniException;
-import Excepciones.ErrorIngresoEmailException;
-import Excepciones.ErrorIngresoNombreException;
-import Excepciones.ErrorIngresoTelefonoException;
+import excepciones.ErrorIngresoDniException;
+import excepciones.ErrorIngresoEmailException;
+import excepciones.ErrorIngresoNombreException;
+import excepciones.ErrorIngresoTelefonoException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import modelos.Cliente;
@@ -15,7 +16,15 @@ import util.*;
 
 public class GestorClientes {
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Cliente> baseClientes = new ArrayList<>();
+    static ArrayList<Cliente> baseClientes = new ArrayList<>(
+            List.of(
+                    new Cliente("Juan", "45454545F", "654545454", "jj@j.com"),
+                    new Cliente("María", "12345678A", "611223344", "maria@example.com"),
+                    new Cliente("Pedro", "87654321B", "622334455", "pedro@example.com"),
+                    new Cliente("Lucía", "11223344C", "633445566", "lucia@example.com"),
+                    new Cliente("Carlos", "99887766D", "644556677", "carlos@example.com")
+            )
+    );
 
     public static void ejecutarMenuCliente() {
         int opc;

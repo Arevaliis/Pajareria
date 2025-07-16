@@ -1,4 +1,4 @@
-package Excepciones;
+package excepciones;
 
 public class ErrorBaseDatosClientesVacia extends RuntimeException {
     public ErrorBaseDatosClientesVacia(String message) {

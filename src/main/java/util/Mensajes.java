@@ -62,7 +62,8 @@ public class Mensajes {
                     1. Todas las ventas
                     2. Ventas por cliente
                     3. Importe total de cada venta
-                    4. Volver
+                    4. Gasto total de cliente
+                    5. Volver
                 ======================================
                 """);
     }
@@ -239,19 +240,16 @@ public class Mensajes {
         System.out.println(venta);
     }
 
-    public static void clienteNoTieneVentas(){
-        System.out.println("El cliente todavía no ha realizado ninguna compra.");
-    }
 
     public static void noHayVentas(){
         System.out.println("No es posible acceder a la sección de ventas porque aún no se ha realizado ninguna.");
     }
 
-    public static void mensajeContador(int contador){
-        System.out.print(contador + ". Venta: ");
+    public static void importeTotalVentasCliente(String nombre, double gasto){
+        System.out.println("El cliente " + nombre + " ha gastado un total de: " + gasto + "€");
     }
 
-    public static void mensajeTotalVenta(double total){
-        System.out.print(total + "€");
+    public static void mensajeTotalVenta(int contador, double total){
+        System.out.print(contador + ". Venta: " + total + "€");
     }
 }

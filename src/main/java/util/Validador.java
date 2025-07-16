@@ -1,8 +1,9 @@
 package util;
 
-import Excepciones.*;
+import excepciones.*;
 import modelos.Cliente;
 import modelos.Pajaro;
+import modelos.Venta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,6 +75,12 @@ public class Validador {
     public static void validandoExistenciaCliente(Cliente cliente) throws ErrorClienteNoExiste{
         if (cliente == null){
             throw new ErrorClienteNoExiste("\nError -> No existe el cliente");
+        }
+    }
+
+    public static void validandoVentasClientes(ArrayList<Venta> ventasCliente) throws ErrorNoVentasCliente{
+        if (ventasCliente.isEmpty()) {
+            throw new ErrorNoVentasCliente("\n El cliente todavía no ha realizado ninguna compra.");
         }
     }
 }
