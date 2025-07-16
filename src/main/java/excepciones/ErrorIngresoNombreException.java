@@ -1,4 +1,4 @@
-package Excepciones;
+package excepciones;
 
 public class ErrorIngresoNombreException extends Exception{
     public ErrorIngresoNombreException(String mensaje){

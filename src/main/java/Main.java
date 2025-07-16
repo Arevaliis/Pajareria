@@ -1,4 +1,4 @@
-import Gestores.*;
+import gestores.*;
 import util.*;
 
 import java.util.Scanner;
@@ -18,6 +18,8 @@ public class Main {
             }
         }
     }
+
+// TODO Mostrar importe total de ventas por cliente
 
     public static boolean ejecutarOpcion(int opc){
         switch (opc){

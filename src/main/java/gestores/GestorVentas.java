@@ -1,8 +1,6 @@
-package Gestores;
+package gestores;
 
-import Excepciones.ErrorBaseDatosClientesVacia;
-import Excepciones.ErrorBaseDatosPajarosVacia;
-import Excepciones.ErrorClienteNoExiste;
+import excepciones.*;
 
 import modelos.*;
 import util.*;
@@ -10,11 +8,9 @@ import util.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static Gestores.GestorPajaros.*;
-import static Gestores.GestorClientes.baseClientes;
+import static gestores.GestorPajaros.*;
+import static gestores.GestorClientes.baseClientes;
 import static util.SelectorOpciones.elegir_opcion;
-
-// TODO Mostrar importe total de ventas por cliente
 
 public class GestorVentas {
     static ArrayList<Venta> baseVentas = new ArrayList<>();
@@ -69,18 +65,19 @@ public class GestorVentas {
     public static void ejecutarMenuVentasTotales(){
         if (!baseVentas.isEmpty()){
             Mensajes.menuMostarVentas();
-            int opc = elegir_opcion(4);
+            int opc = elegir_opcion(5);
 
             while (opc == -1) {
                 Mensajes.menuMostarVentas();
-                opc = elegir_opcion(4);
+                opc = elegir_opcion(5);
             }
 
             switch (opc) {
                 case 1 -> mostrarVentasTotales();
                 case 2 -> mostrarVentasTotalesPorCliente();
                 case 3 -> mostrarImporteTotalPorVenta();
-                case 4 -> {
+                case 4 -> mostrarImporteTotalVentasPorCliente();
+                case 5 -> {
                     return;
                 }
             }
@@ -96,27 +93,33 @@ public class GestorVentas {
         }
     }
 
-    public static void mostrarVentasTotalesPorCliente(){
-        while (true){
-            String dni = GestorClientes.ingresarDni();
-            Cliente cliente = GestorClientes.buscarPorDni(dni);
+    public static ArrayList<Venta> obtenerVenta(){
+        String dni = GestorClientes.ingresarDni();
+        Cliente cliente = GestorClientes.buscarPorDni(dni);
+        ArrayList<Venta> ventasCliente = new ArrayList<>();
 
-            if (cliente != null){
-                for(Venta venta: baseVentas){
-                    if (venta.getCliente().getDni().equals(cliente.getDni())){
-                        Mensajes.mostrarVentasTotales(venta);
-                    }else{
-                        Mensajes.clienteNoTieneVentas();
-                    }
+        try{
+            Validador.validandoExistenciaCliente(cliente);
+            for (Venta venta : baseVentas) {
+                if (venta.getCliente().getDni().equals(cliente.getDni())) {
+                    ventasCliente.add(venta);
                 }
-                return;
             }
+            Validador.validandoVentasClientes(ventasCliente);
+            return ventasCliente;
+        }catch (ErrorClienteNoExiste | ErrorNoVentasCliente e){
+            System.out.println(e.getMessage());
+        }
 
-            Mensajes.clienteNoExiste();
-            Mensajes.ingresarOtroDni();
+        return null;
+    }
 
-            if (!scanner.nextLine().equalsIgnoreCase("S")){
-                return;
+    public static void mostrarVentasTotalesPorCliente(){
+        ArrayList<Venta> ventasClientes = obtenerVenta();
+
+        if (ventasClientes != null){
+            for (Venta venta : ventasClientes) {
+                Mensajes.mostrarVentasTotales(venta);
             }
         }
     }
@@ -124,12 +127,28 @@ public class GestorVentas {
     public static void mostrarImporteTotalPorVenta(){
         int contador = 1;
         for (Venta venta: baseVentas){
-            Mensajes.mensajeContador(contador++);
             double total = 0.00;
             for (Pajaro pajaro: venta.getLineasDeVenta()) {
                 total += pajaro.getPrecio();
             }
-            Mensajes.mensajeTotalVenta(total);
+            Mensajes.mensajeTotalVenta(contador++, total);
+        }
+    }
+
+    public static void mostrarImporteTotalVentasPorCliente(){
+        ArrayList<Venta> ventasClientes = obtenerVenta();
+
+        if(ventasClientes != null) {
+            double totalVentas = 0.00;
+            String cliente = "";
+
+            for (Venta venta : ventasClientes) {
+                cliente = venta.getCliente().getNombre();
+                for (Pajaro pajaro : venta.getLineasDeVenta()) {
+                    totalVentas += pajaro.getPrecio();
+                }
+            }
+            Mensajes.importeTotalVentasCliente(cliente, totalVentas);
         }
     }
 

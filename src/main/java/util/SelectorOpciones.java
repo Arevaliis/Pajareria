@@ -1,6 +1,6 @@
 package util;
 
-import Excepciones.ValorFueraRangoExcepcion;
+import excepciones.ValorFueraRangoExcepcion;
 
 import java.util.Scanner;
 
