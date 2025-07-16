@@ -7,11 +7,11 @@ import modelos.Pajaro;
 import util.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 // TODO Gestión de stock (disminuir cantidad de pájaros disponibles al vender)
-// TODO Ordenar pájaros por campo especie
 
 public class GestorPajaros {
     static Scanner scanner = new Scanner(System.in);
@@ -104,6 +104,8 @@ public class GestorPajaros {
         basePajaros.add(new Pajaro(ingresarEspecie(), ingresarColor(), ingresarPrecio()));
         Mensajes.agregadoPajaroConExito();
         Mensajes.agregarOtroPajaro();
+
+        basePajaros.sort(Comparator.comparing(Pajaro::getEspecie));
     }
 
     public static Pajaro busquedaPorEspecie(){

@@ -19,8 +19,6 @@ public class Main {
         }
     }
 
-// TODO Mostrar importe total de ventas por cliente
-
     public static boolean ejecutarOpcion(int opc){
         switch (opc){
             case 1 -> GestorClientes.ejecutarMenuCliente();
