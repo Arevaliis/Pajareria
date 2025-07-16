@@ -1,3 +1,5 @@
+package modelos;
+
 public class Pajaro {
     private String especie;
     private String color;
