@@ -6,13 +6,12 @@ import excepciones.ErrorIngresoNombreException;
 import excepciones.ErrorIngresoTelefonoException;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 import modelos.Cliente;
 import util.*;
-
-// TODO Ordenar clientes por campo nombre
 
 public class GestorClientes {
     static Scanner scanner = new Scanner(System.in);
@@ -182,6 +181,8 @@ public class GestorClientes {
             Mensajes.yaExisteDni();
         }
         Mensajes.ingresarNuevoCliente();
+
+        baseClientes.sort(Comparator.comparing(Cliente::getNombre));
     }
 
     public static void  eliminarCliente(){
