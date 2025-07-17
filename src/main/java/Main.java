@@ -3,12 +3,20 @@ import util.*;
 
 import java.util.Scanner;
 
+import static util.Repetir.deseaRepetirAccion;
 import static util.SelectorOpciones.elegir_opcion;
 
+/**
+ * Clase principal que inicia la ejecución del programa
+ */
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static boolean estaFuncionando = true;
 
+    /**
+     * Método principal que inicia el menú principal del programa.
+     * Se ejecuta hasta que el usuario decida salir.
+     */
     public static void main(String[] args) {
         while (estaFuncionando){
             Mensajes.menuInicial();
@@ -19,6 +27,12 @@ public class Main {
         }
     }
 
+    /**
+     * Ejecuta la opción elegida por el usuario.
+     *
+     * @param opc Valor numérico ingresado por el usuario.
+     * @return Boolean False para finalizar la ejecución del programa. True para seguir en el programa.
+     */
     public static boolean ejecutarOpcion(int opc){
         switch (opc){
             case 1 -> GestorClientes.ejecutarMenuCliente();
@@ -33,6 +47,12 @@ public class Main {
         return seguir();
     }
 
+
+    /**
+     * Permite volver al menu principal al terminar la ejecución de la opción seleccionada anteriormente.
+     *
+     * @return Boolean False para finalizar la ejecución del programa. True para seguir en el programa.
+     */
     public static boolean seguir(){
         Mensajes.mensajeVolverMenu();
         if (!deseaRepetirAccion()){
@@ -40,9 +60,5 @@ public class Main {
             return false;
         }
         return true;
-    }
-
-    public static boolean deseaRepetirAccion(){
-        return scanner.nextLine().trim().equalsIgnoreCase("S");
     }
 }
