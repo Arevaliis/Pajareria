@@ -4,11 +4,13 @@ public class Pajaro {
     private String especie;
     private String color;
     private double precio;
+    private int stock;
 
-    public Pajaro(String especie, String color, double precio){
+    public Pajaro(String especie, String color, double precio, int stock){
         this.especie = especie;
         this.color = color;
         this.precio = precio;
+        this.stock = stock;
     }
 
     public String getEspecie() {
@@ -23,6 +25,10 @@ public class Pajaro {
         return precio;
     }
 
+    public int getStock() {
+        return stock;
+    }
+
     public void setEspecie(String especie) {
         this.especie = especie;
     }
@@ -35,8 +41,12 @@ public class Pajaro {
         this.precio = precio;
     }
 
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     @Override
     public String toString() {
-        return "Especie: " + this.getEspecie() + ", color: " + this.getColor() + ", precio: " + this.getPrecio();
+        return "Especie: " + this.getEspecie() + ", color: " + this.getColor() + ", precio: " + this.getPrecio() + ", stock: " + this.stock;
     }
 }

@@ -181,8 +181,6 @@ public class GestorClientes {
             Mensajes.yaExisteDni();
         }
         Mensajes.ingresarNuevoCliente();
-
-        baseClientes.sort(Comparator.comparing(Cliente::getNombre));
     }
 
     public static void  eliminarCliente(){
@@ -251,6 +249,8 @@ public class GestorClientes {
     }
 
     public static void listarClientes(){
+        baseClientes.sort(Comparator.comparing(Cliente::getNombre));
+
         for (Cliente cliente: baseClientes){
             Mensajes.mostarCliente(cliente);
         }

@@ -37,7 +37,8 @@ public class Mensajes {
                     1. Alta de pájaro
                     2. Listado
                     3. Búsqueda por especie
-                    4. Volver
+                    4. Agregar Stock
+                    5. Volver
                 ==============================
                 """);
     }
@@ -189,6 +190,10 @@ public class Mensajes {
         System.out.print("Ingrese el precio del pájaro (use punto para los decimales): ");
     }
 
+    public static void mensajeStock(){
+        System.out.print("Ingrese la cantidad de unidades: ");
+    }
+
     public static void agregadoPajaroConExito(){
         System.out.println("El pájaro ha sido registrado correctamente.");
     }
@@ -205,6 +210,13 @@ public class Mensajes {
         System.out.println(pajaro);
     }
 
+    public static void modificadoStock(){
+        System.out.println("El stock ha sido actualizado");
+    }
+
+    public static void modificarOtraVezStock(){
+        System.out.print("\n¿Desea modificar el stock de otra especie? (S/N): ");
+    }
 
     /* ======================= util.Mensajes de Hacer Venta ======================= */
 

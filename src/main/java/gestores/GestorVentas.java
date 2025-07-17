@@ -29,6 +29,7 @@ public class GestorVentas {
 
     public static void crearVenta(Venta venta){
         boolean seguirAgregando = true;
+        double total = 0.00;
 
         while (seguirAgregando){
             Mensajes.tituloEspecies();
@@ -36,16 +37,31 @@ public class GestorVentas {
             Mensajes.comprarPajaro();
             Pajaro pajaro = busquedaPorEspecie();
 
-            if (pajaro != null){
-                venta.getLineasDeVenta().add(pajaro);
-            }else{
+            if(pajaro != null){
+                int cantidad = ingresarStock();
+
+                if (pajaro.getStock() - cantidad >= 0){
+                    venta.getLineasDeVenta().add(pajaro);
+                    total += calcularPrecioFinal(pajaro.getPrecio(), cantidad);
+                    pajaro.setStock(pajaro.getStock() - cantidad);
+
+                } else{
+                    System.out.println("No hay stock suficiente.");
+                }
+            }
+             else{
                 Mensajes.noExistePajaro();
             }
 
             Mensajes.volverComprarPajaro();
             seguirAgregando = Repetir.deseaRepetirAccion();
         }
+        venta.setTotal(total);
         imprimirTicket(venta);
+    }
+
+    public static double calcularPrecioFinal(double precio, int cantidad){
+        return precio * cantidad;
     }
 
     public static String obtenerFecha(){
