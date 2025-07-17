@@ -12,8 +12,16 @@ import static gestores.GestorPajaros.*;
 import static gestores.GestorClientes.baseClientes;
 import static util.SelectorOpciones.elegir_opcion;
 
+/**
+ * Clase que controla las ventas
+ */
 public class GestorVentas {
     static ArrayList<Venta> baseVentas = new ArrayList<>();
+
+    /**
+     * Inicia el proceso de venta.
+     * Se encarga de las comprobaciones, si existe el cliente y si las bases de datos están vacías.
+     */
     public static void iniciarVenta(){
         try {
             Validador.validandoBaseClientes(baseClientes);
@@ -21,12 +29,19 @@ public class GestorVentas {
             String dni = GestorClientes.ingresarDni();
             Cliente cliente = GestorClientes.buscarPorDni(dni);
             Validador.validandoExistenciaCliente(cliente);
-            crearVenta(new Venta(cliente, new ArrayList<>(), obtenerFecha()));
+
+            crearVenta(new Venta(cliente, new ArrayList<>(), obtenerFecha())); // Crea una instancia de Venta
         }catch (ErrorBaseDatosClientesVacia | ErrorBaseDatosPajarosVacia | ErrorClienteNoExiste e){
             System.out.println(e.getMessage());
         }
     }
 
+    /**
+     * Continúa el proceso de venta.
+     * Agrega las especies y la cantidad que le pida el cliente.
+     *
+     * @param venta Instancia de venta creada anteriormente
+     */
     public static void crearVenta(Venta venta){
         boolean seguirAgregando = true;
         double total = 0.00;
@@ -46,7 +61,7 @@ public class GestorVentas {
                     pajaro.setStock(pajaro.getStock() - cantidad);
 
                 } else{
-                    System.out.println("No hay stock suficiente.");
+                    Mensajes.noHayStockSuficiente(pajaro.getStock());
                 }
             }
              else{
@@ -60,15 +75,33 @@ public class GestorVentas {
         imprimirTicket(venta);
     }
 
+    /**
+     * Calcula el importe de compra según el precio del pájaro y la cantidad deseada.
+     *
+     * @param precio Precio del pájaro
+     * @param cantidad  Cantidad de unidades compradas.
+     *
+     * @return double con el precio total
+     */
     public static double calcularPrecioFinal(double precio, int cantidad){
         return precio * cantidad;
     }
 
+    /**
+     * Obtiene el dia actual
+     *
+     * @return String con el día actual
+     */
     public static String obtenerFecha(){
         LocalDate date = LocalDate.now();
         return String.valueOf(date);
     }
 
+    /**
+     * Muestra por pantalla el ticket de compra
+     *
+     * @param venta Venta con toda la información de la venta
+     */
     public static void imprimirTicket(Venta venta){
         if (!venta.getLineasDeVenta().isEmpty()){
             Mensajes.compraTotal(venta);
@@ -78,13 +111,16 @@ public class GestorVentas {
         }
     }
 
+    /**
+     * Muestra el menu de ventas totales para ver el historial de ventas.
+     */
     public static void ejecutarMenuVentasTotales(){
         if (!baseVentas.isEmpty()){
-            Mensajes.menuMostarVentas();
+            Mensajes.menuMostrarVentas();
             int opc = elegir_opcion(5);
 
             while (opc == -1) {
-                Mensajes.menuMostarVentas();
+                Mensajes.menuMostrarVentas();
                 opc = elegir_opcion(5);
             }
 
@@ -103,12 +139,20 @@ public class GestorVentas {
         }
     }
 
+    /**
+     * Muestra todas las ventas realizadas
+     */
     public static void mostrarVentasTotales(){
         for (Venta venta: baseVentas){
             Mensajes.mostrarVentasTotales(venta);
         }
     }
 
+    /**
+     * Obtiene todas las ventas realizadas por un cliente
+     *
+     * @return ArrayList con las ventas de un cliente si existe, si no Null.
+     */
     public static ArrayList<Venta> obtenerVenta(){
         String dni = GestorClientes.ingresarDni();
         Cliente cliente = GestorClientes.buscarPorDni(dni);
@@ -130,6 +174,9 @@ public class GestorVentas {
         return null;
     }
 
+    /**
+     * Muestra todas las ventas del cliente ingresado
+     */
     public static void mostrarVentasTotalesPorCliente(){
         ArrayList<Venta> ventasClientes = obtenerVenta();
 
@@ -140,6 +187,9 @@ public class GestorVentas {
         }
     }
 
+    /**
+     * Muestra el importe total de cada venta
+     */
     public static void mostrarImporteTotalPorVenta(){
         int contador = 1;
         for (Venta venta: baseVentas){
@@ -151,6 +201,9 @@ public class GestorVentas {
         }
     }
 
+    /**
+     * Muestra el importe total gastado por el cliente ingresado
+     */
     public static void mostrarImporteTotalVentasPorCliente(){
         ArrayList<Venta> ventasClientes = obtenerVenta();
 
@@ -168,6 +221,10 @@ public class GestorVentas {
         }
     }
 
+    /**
+     * Pregunta al usuario si desea volver al menu ventas totales.
+     * Si ingresa "S" vuelve al menu ventas totales, si no vuelve al menu principal.
+     */
     public static void seguirMenuMostrarVentas(){
         Mensajes.mensajeVolverMenuVentasTotales();
         if (Repetir.deseaRepetirAccion()){

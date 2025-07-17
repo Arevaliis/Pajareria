@@ -9,19 +9,18 @@ import util.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Clase que gestiona la funcionalidad de las opciones del menu pájaros
+ */
 public class GestorPajaros {
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Pajaro> basePajaros = new ArrayList<>(
-            List.of(
-                    new Pajaro("Periquito", "Amarillo", 20.0, 5),
-                    new Pajaro("Loro", "Verde", 15.5, 0),
-                    new Pajaro("Canario", "Rojo", 120.0, 4)
-            )
-    );
+    static ArrayList<Pajaro> basePajaros = new ArrayList<>();
 
+    /**
+     * Muestra el menu pájaros hasta que el usuario elija una opción válida
+     */
     public static void ejecutarMenuPajaros(){
         int opc;
         do {
@@ -32,6 +31,13 @@ public class GestorPajaros {
         }while (opc == -1);
     }
 
+    /**
+     * Comprueba que la base de datos pájaros no se encuentre vacía.
+     * Sí es el caso, solo se podrán ejecutar las opciones 1 y 5.
+     * Si ingresa otro valor, saltará un mensaje de advertencia.
+     *
+     * @param opc Número ingresado por el usuario
+     */
     public static void comprobarBaseDatosPajarosVacia(int opc){
         if (basePajaros.isEmpty() && opc != 1 && opc != 5 ){
             Mensajes.basePajarosVacia();
@@ -40,6 +46,11 @@ public class GestorPajaros {
         }
     }
 
+    /**
+     * Ejecuta la opción elegida por el usuario.
+     *
+     * @param opc Número ingresado por el usuario.
+     */
     public static void ejecutarOpcionMenuPajaros(int opc){
         do {
             switch (opc) {
@@ -63,6 +74,11 @@ public class GestorPajaros {
         } while (Repetir.deseaRepetirAccion());
     }
 
+    /**
+     * Pide al usuario que ingrese la especie del pájaro
+     *
+     * @return String con la especie del pájaro
+     */
     public static String ingresarEspecie(){
         while (true){
             try {
@@ -76,6 +92,11 @@ public class GestorPajaros {
         }
     }
 
+    /**
+     * Pide al usuario que ingrese el color del pájaro
+     *
+     * @return String con el color del pájaro
+     */
     public static String ingresarColor(){
         while (true){
             try {
@@ -89,6 +110,11 @@ public class GestorPajaros {
         }
     }
 
+    /**
+     * Pide al usuario que ingrese el precio del pájaro
+     *
+     * @return double con el precio del pájaro
+     */
     public static double ingresarPrecio(){
         while (true){
             try {
@@ -100,6 +126,11 @@ public class GestorPajaros {
         }
     }
 
+    /**
+     * Pide al usuario que ingrese la cantidad disponible
+     *
+     * @return  int con la cantidad disponible del pájaro
+     */
     public static int ingresarStock(){
        while (true){
            try {
@@ -115,12 +146,19 @@ public class GestorPajaros {
        }
     }
 
+    /**
+     * Permite agregar un nuevo pájaro
+     */
     public static void agregarPajaro(){
         basePajaros.add(new Pajaro(ingresarEspecie(), ingresarColor(), ingresarPrecio(), ingresarStock()));
         Mensajes.agregadoPajaroConExito();
         Mensajes.agregarOtroPajaro();
     }
 
+    /**
+     * Busca en la base de datos de pájaros por especie
+     * @return Pájaro Si existe la especie, en caso contrario devuelve null
+     */
     public static Pajaro busquedaPorEspecie(){
         String especie = ingresarEspecie();
         Mensajes.tipoEspecie(especie);
@@ -134,6 +172,9 @@ public class GestorPajaros {
         return null;
     }
 
+    /**
+     * Ordena la base de datos de pájaros y la muestra por pantalla.
+     */
     public static void listarPajaros(){
         basePajaros.sort(Comparator.comparing(Pajaro::getEspecie));
 
@@ -142,6 +183,9 @@ public class GestorPajaros {
         }
     }
 
+    /**
+     * Permite agregar más cantidad al stock de la especie del pájaro que ingresemos.
+     */
     public static void agregarStockEspecie(){
         Pajaro pajaro = busquedaPorEspecie();
 
@@ -156,6 +200,13 @@ public class GestorPajaros {
         Mensajes.modificarOtraVezStock();
     }
 
+    /**
+     * Pregunta al usuario si desea volver al menu pájaros.
+     * Si ingresa "S" vuelve al menu pájaros, si no vuelve al menu principal.
+     * Si el usuario selecciono la opción 5 no se ejecuta.
+     *
+     * @param opc Valor numérico ingresado por el usuario cuando se le solicitó en el menu pájaros
+     */
     public static void seguirMenuPajaros(int opc){
         if (opc != 5){
             Mensajes.mensajeVolverMenuPajaros();
