@@ -83,4 +83,10 @@ public class Validador {
             throw new ErrorNoVentasCliente("\n El cliente todavía no ha realizado ninguna compra.");
         }
     }
+
+    public static void validandoCantidadStock(int cantidad) throws ErrorValorInferiorCero{
+        if (cantidad < 1){
+            throw new ErrorValorInferiorCero("\nError la cantidad a ingresar no puede ser menor de 1.");
+        }
+    }
 }

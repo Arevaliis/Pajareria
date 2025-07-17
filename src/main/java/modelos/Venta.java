@@ -6,11 +6,13 @@ public class Venta {
     private Cliente cliente;
     private ArrayList<Pajaro> lineasDeVenta;
     private String fecha;
+    private double total;
 
     public Venta(Cliente cliente, ArrayList<Pajaro> lineasDeVenta, String fecha){
         this.cliente = cliente;
         this.lineasDeVenta = lineasDeVenta;
         this.fecha = fecha;
+        this.total = 0.00;
     }
 
     public Cliente getCliente() {
@@ -37,14 +39,16 @@ public class Venta {
         this.fecha = fecha;
     }
 
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     @Override
     public String toString() {
         String pajarosComprados = "";
-        double total = 0.00;
 
         for (Pajaro pajaro: this.lineasDeVenta){
             pajarosComprados += pajaro.getEspecie() + ", ";
-            total += pajaro.getPrecio();
         }
         pajarosComprados = pajarosComprados.substring(0, pajarosComprados.length()- 2);
 
@@ -57,6 +61,6 @@ public class Venta {
                     Total: %.2f€
                 ------------------------------
                 Fecha: %s
-                -----------------------------""".formatted(this.cliente.getNombre(), pajarosComprados, total, this.fecha);
+                -----------------------------""".formatted(this.cliente.getNombre(), pajarosComprados, this.total, this.fecha);
     }
 }

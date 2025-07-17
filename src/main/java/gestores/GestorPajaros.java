@@ -3,6 +3,7 @@ package gestores;
 import excepciones.ErrorIngresoColor;
 import excepciones.ErrorIngresoNombreException;
 
+import excepciones.ErrorValorInferiorCero;
 import modelos.Pajaro;
 import util.*;
 
@@ -11,15 +12,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
-// TODO Gestión de stock (disminuir cantidad de pájaros disponibles al vender)
-
 public class GestorPajaros {
     static Scanner scanner = new Scanner(System.in);
     static ArrayList<Pajaro> basePajaros = new ArrayList<>(
             List.of(
-                    new Pajaro("Canario", "Amarillo", 20.0),
-                    new Pajaro("Periquito", "Verde", 15.5),
-                    new Pajaro("Loro", "Rojo", 120.0)
+                    new Pajaro("Periquito", "Amarillo", 20.0, 5),
+                    new Pajaro("Loro", "Verde", 15.5, 0),
+                    new Pajaro("Canario", "Rojo", 120.0, 4)
             )
     );
 
@@ -27,14 +26,14 @@ public class GestorPajaros {
         int opc;
         do {
             Mensajes.menuPajaros();
-            opc = SelectorOpciones.elegir_opcion(4);
+            opc = SelectorOpciones.elegir_opcion(5);
             comprobarBaseDatosPajarosVacia(opc);
             seguirMenuPajaros(opc);
         }while (opc == -1);
     }
 
     public static void comprobarBaseDatosPajarosVacia(int opc){
-        if (basePajaros.isEmpty() && opc != 1 && opc != 4 ){
+        if (basePajaros.isEmpty() && opc != 1 && opc != 5 ){
             Mensajes.basePajarosVacia();
         } else {
             ejecutarOpcionMenuPajaros(opc);
@@ -56,7 +55,8 @@ public class GestorPajaros {
                     }
                     Mensajes.volverBuscarPajaro();
                 }
-                case 4 -> {
+                case 4 -> agregarStockEspecie();
+                case 5 -> {
                     return;
                 }
             }
@@ -95,17 +95,30 @@ public class GestorPajaros {
                 Mensajes.mensajePrecio();
                 return (double) Math.round(Double.parseDouble(scanner.nextLine().trim()) * 100) /100;
             } catch (NumberFormatException e) {
-                System.out.println("Error -> Debe ingresar un número. Use punto para los decimales.");
+                System.out.println("\nError -> Debe ingresar un número. Use punto para los decimales.");
             }
         }
     }
 
+    public static int ingresarStock(){
+       while (true){
+           try {
+               Mensajes.mensajeStock();
+               int cantidad = Integer.parseInt(scanner.nextLine());
+               Validador.validandoCantidadStock(cantidad);
+               return cantidad;
+           }catch (ErrorValorInferiorCero e){
+               System.out.println(e.getMessage());
+           }catch (NumberFormatException e) {
+               System.out.println("\nError -> Debe ingresar un número.");
+           }
+       }
+    }
+
     public static void agregarPajaro(){
-        basePajaros.add(new Pajaro(ingresarEspecie(), ingresarColor(), ingresarPrecio()));
+        basePajaros.add(new Pajaro(ingresarEspecie(), ingresarColor(), ingresarPrecio(), ingresarStock()));
         Mensajes.agregadoPajaroConExito();
         Mensajes.agregarOtroPajaro();
-
-        basePajaros.sort(Comparator.comparing(Pajaro::getEspecie));
     }
 
     public static Pajaro busquedaPorEspecie(){
@@ -122,13 +135,29 @@ public class GestorPajaros {
     }
 
     public static void listarPajaros(){
+        basePajaros.sort(Comparator.comparing(Pajaro::getEspecie));
+
         for (Pajaro pajaro: basePajaros){
             Mensajes.mostrarPajaro(pajaro);
         }
     }
 
+    public static void agregarStockEspecie(){
+        Pajaro pajaro = busquedaPorEspecie();
+
+        if (pajaro != null) {
+            int cantidad = ingresarStock();
+            pajaro.setStock(pajaro.getStock() + cantidad);
+            Mensajes.modificadoStock();
+        }else{
+            Mensajes.noExistePajaro();
+        }
+
+        Mensajes.modificarOtraVezStock();
+    }
+
     public static void seguirMenuPajaros(int opc){
-        if (opc != 4){
+        if (opc != 5){
             Mensajes.mensajeVolverMenuPajaros();
             if (Repetir.deseaRepetirAccion()){
                 ejecutarMenuPajaros();
