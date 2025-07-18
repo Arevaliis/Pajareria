@@ -2,7 +2,9 @@ package util;
 
 import modelos.*;
 
-/** Clase que contiene todos los mensajes del programa; menús, mensajes informativos y errores. */
+/**
+ * Clase que contiene todos los mensajes del programa. Menús, mensajes informativos y errores.
+ */
 public class Mensajes {
 
     /** Muestra el menu principal del programa */
@@ -19,7 +21,7 @@ public class Mensajes {
                 """);
     }
 
-    /** Muestra el menu clientes del programa */
+    /** Muestra el menu clientes */
     public static void menuClientes(){
         System.out.println("""
                 
@@ -34,7 +36,7 @@ public class Mensajes {
                 """);
     }
 
-    /** Muestra el menu pájaros del programa */
+    /** Muestra el menu pájaros */
     public static void menuPajaros(){
         System.out.println("""
                 
@@ -62,7 +64,7 @@ public class Mensajes {
                 """);
     }
 
-    /** Muestra el menu ventas del programa */
+    /** Muestra el menu del historial de ventas */
     public static void menuMostrarVentas(){
         System.out.println("""
                 
@@ -83,11 +85,6 @@ public class Mensajes {
 
                             /* ======================= Mensajes de Clientes ======================= */
 
-    /** Muestra un mensaje cuando el cliente no existe */
-    public static void clienteNoExiste(){
-        System.out.println("No se ha encontrado ningún cliente con ese DNI.");
-    }
-
     /** Pregunta al usuario si desea buscar otro cliente */
     public static void buscarDeNuevoCliente(){
         System.out.print("\n¿Desea buscar otro cliente por DNI? (S/N): ");
@@ -103,19 +100,9 @@ public class Mensajes {
         System.out.print("Ingrese el DNI del cliente: ");
     }
 
-    /** Informa de que el DNI ingresado ya corresponde a un cliente */
-    public static void yaExisteDni(){
-        System.out.println("Error: Ya existe un cliente registrado con ese DNI.");
-    }
-
     /** Solicita el ingreso del teléfono del cliente */
     public static void mensajeTelefono(){
         System.out.print("Ingrese el número de teléfono del cliente: ");
-    }
-
-    /** Informa que el teléfono ingresado ya corresponde a un cliente */
-    public static void telefonoRepetido(){
-        System.out.println("Error: Ya existe un cliente con ese número de teléfono.\n");
     }
 
     /** Pide el email del cliente */
@@ -123,17 +110,12 @@ public class Mensajes {
         System.out.print("Ingrese el correo electrónico del cliente: ");
     }
 
-    /** Informa de que el email ingresado ya corresponde a un cliente */
-    public static void  emailRepetido(){
-        System.out.println("Error: Ya existe un cliente con ese correo electrónico.\n");
-    }
-
     /** Confirmación del ingreso de un cliente a la base de datos clientes */
     public static void clienteAgregado(){
         System.out.println("Cliente registrado correctamente.");
     }
 
-    /** Pregunta al usuario si desea agregar un nuevo cliente */
+    /** Pregunta al usuario si desea agregar otro nuevo cliente */
     public static void ingresarNuevoCliente(){
         System.out.print("\n¿Desea ingresar un nuevo cliente? (S/N): ");
     }
@@ -168,22 +150,17 @@ public class Mensajes {
         System.out.println("El " + campo + " ha sido modificado de " + valorAntiguo + " a " + valorNuevo);
     }
 
-    /** Pregunta para modificar información de otro cliente */
-    public static void modificarAlgoMas(){
-        System.out.print("\n¿Desea modificar otro dato de algún cliente? (S/N): ");
-    }
-
     /** Muestra un mensaje con la información del cliente */
-    public static void mostarCliente(Cliente cliente){
+    public static void mostrarCliente(Cliente cliente){
         System.out.println(cliente);
     }
 
-    /** Muestra un mensaje para volver al menu principal */
+    /** Pregunta al usuario si desea volver al menu principal */
     public static void mensajeVolverMenu(){
         System.out.print("\n¿Desea volver al menú principal? (S para Sí / N para Salir): ");
     }
 
-    /** Muestra un mensaje volver al menu clientes */
+    /** Pregunta al usuario si desea volver al menu clientes */
     public static void mensajeVolverMenuClientes(){
         System.out.print("\n¿Desea volver al menú de gestión de clientes? (S/N): ");
     }
@@ -193,11 +170,6 @@ public class Mensajes {
     /** Informa que la base de datos de pájaros esta vacía */
     public static void basePajarosVacia(){
         System.out.println("La base de datos de pájaros esta vacía.");
-    }
-
-    /** Informa que la especie de pájaro no existe en la base de datos */
-    public static void noExistePajaro(){
-        System.out.println("No se ha encontrado ningún pájaro de esa especie.");
     }
 
     /** Pregunta si quiere buscar otra especie de pájaro */
@@ -225,7 +197,7 @@ public class Mensajes {
         System.out.print("Ingrese el precio del pájaro (use punto para los decimales): ");
     }
 
-    /** Pide la cantidad de unidades del pájaro */
+    /** Pide la cantidad de unidades para el inventario del pájaro */
     public static void mensajeStock(){
         System.out.print("Ingrese la cantidad de unidades: ");
     }
@@ -238,11 +210,6 @@ public class Mensajes {
     /** Pregunta si desea agregar un nuevo pájaro */
     public static void agregarOtroPajaro(){
         System.out.print("\n¿Desea registrar otro pájaro? (S/N): ");
-    }
-
-    /** Pide el tipo de especie del pájaro */
-    public static void tipoEspecie(String especie){
-        System.out.println(especie);
     }
 
     /** Muestra la información del pájaro */
@@ -264,7 +231,7 @@ public class Mensajes {
 
     /** Título para el inventario */
     public static void tituloEspecies(){
-        System.out.println("\n----- Inventario -----");
+        System.out.println("\n--------- Inventario ---------");
     }
 
     /** Pide al usuario que ingrese el pájaro que quiere comprar */
@@ -278,19 +245,8 @@ public class Mensajes {
     }
 
     /** Muestra el ticket de compra */
-    public static void compraTotal(Venta venta){
+    public static void ticketCompra(Venta venta){
         System.out.println(venta);
-    }
-
-    /** Informa de que la cesta esta vacía */
-    public static void cestaVacia(){
-        System.out.println("No ha añadido ningún producto a la cesta. La operación se cancelará.");
-
-    }
-
-    /** Informa de que no hay stock suficiente del producto seleccionado */
-    public static void noHayStockSuficiente(int cantidad){
-        System.out.println("No hay stock suficiente. Stock disponible: " + cantidad);
     }
 
                         /* ======================= Mensajes de Mostrar Ventas ======================= */
@@ -300,17 +256,7 @@ public class Mensajes {
         System.out.print("\n¿Desea volver al menú de ventas totales? (S/N): ");
     }
 
-    /** Muestra el ticket de la venta */
-    public static void mostrarVentasTotales(Venta venta){
-        System.out.println(venta);
-    }
-
-    /** Informa de que no hay ventas realizadas */
-    public static void noHayVentas(){
-        System.out.println("No es posible acceder a la sección de ventas porque aún no se ha realizado ninguna.");
-    }
-
-    /** Muestra el importe total gastado por el cliente */
+    /** Muestra el importe total gastado por el cliente especificado */
     public static void importeTotalVentasCliente(String nombre, double gasto){
         System.out.println("El cliente " + nombre + " ha gastado un total de: " + gasto + "€");
     }

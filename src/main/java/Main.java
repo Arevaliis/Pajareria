@@ -1,20 +1,20 @@
 import gestores.*;
 import util.*;
 
-import java.util.Scanner;
-
 import static util.Repetir.deseaRepetirAccion;
 import static util.SelectorOpciones.elegir_opcion;
 
 /**
  * Clase principal que inicia la ejecución del programa
+ *
+ * @author Jose Iglesias
+ * @version 3.0
  */
 public class Main {
-    static Scanner scanner = new Scanner(System.in);
     static boolean estaFuncionando = true;
 
     /**
-     * Método principal que inicia el menú principal del programa.
+     * Método principal que inicia con el menú principal del programa.
      * Se ejecuta hasta que el usuario decida salir.
      */
     public static void main(String[] args) {
@@ -31,7 +31,7 @@ public class Main {
      * Ejecuta la opción elegida por el usuario.
      *
      * @param opc Valor numérico ingresado por el usuario.
-     * @return Boolean False para finalizar la ejecución del programa. True para seguir en el programa.
+     * @return Boolean {@code false} para finalizar la ejecución del programa. {@code true} para seguir en el programa.
      */
     public static boolean ejecutarOpcion(int opc){
         switch (opc){
@@ -47,11 +47,10 @@ public class Main {
         return seguir();
     }
 
-
     /**
-     * Permite volver al menu principal al terminar la ejecución de la opción seleccionada anteriormente.
+     * Pregunta al usuario si desea volver al menú principal tras ejecutar una opción.
      *
-     * @return Boolean False para finalizar la ejecución del programa. True para seguir en el programa.
+     * @return {@code true} si el usuario desea continuar en el programa; {@code false} si desea salir.
      */
     public static boolean seguir(){
         Mensajes.mensajeVolverMenu();

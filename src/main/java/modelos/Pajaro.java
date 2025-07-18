@@ -10,7 +10,7 @@ public class Pajaro {
     private int stock;
 
     /**
-     * Parámetros para crear un pájaro
+     * Información del pájaro
      *
      * @param especie Especie del pájaro
      * @param color Color del pájaro

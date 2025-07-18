@@ -1,22 +1,27 @@
 package gestores;
 
-import excepciones.ErrorIngresoColor;
-import excepciones.ErrorIngresoNombreException;
+import excepciones.*;
 
-import excepciones.ErrorValorInferiorCero;
 import modelos.Pajaro;
 import util.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 /**
- * Clase que gestiona la funcionalidad de las opciones del menu pájaros
+ * Clase que gestiona la funcionalidad de las opciones del menu pájaros,
+ * incluyendo agregar pájaro, buscar por especie, mostrar el inventario y agregar stock.
+ *
+ * @author Jose Iglesias
+ * @version 3.0
  */
 public class GestorPajaros {
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Pajaro> basePajaros = new ArrayList<>();
+    static ArrayList<Pajaro> basePajaros = new ArrayList<>(
+            List.of(new Pajaro("LORO", "VERDE", 5.23, 10))
+    );
 
     /**
      * Muestra el menu pájaros hasta que el usuario elija una opción válida
@@ -33,7 +38,7 @@ public class GestorPajaros {
 
     /**
      * Comprueba que la base de datos pájaros no se encuentre vacía.
-     * Sí es el caso, solo se podrán ejecutar las opciones 1 y 5.
+     * Sí es el caso, solo se podrán ejecutar las opciones agregar pájaro y volver.
      * Si ingresa otro valor, saltará un mensaje de advertencia.
      *
      * @param opc Número ingresado por el usuario
@@ -49,7 +54,7 @@ public class GestorPajaros {
     /**
      * Ejecuta la opción elegida por el usuario.
      *
-     * @param opc Número ingresado por el usuario.
+     * @param opc Número ingresado
      */
     public static void ejecutarOpcionMenuPajaros(int opc){
         do {
@@ -60,16 +65,17 @@ public class GestorPajaros {
                     return;
                 }
                 case 3 -> {
-                    Pajaro pajaro = busquedaPorEspecie();
-                    if (pajaro == null){
-                        Mensajes.noExistePajaro();
+                    try{
+                        Pajaro pajaro = busquedaPorEspecie();
+                        Validador.noExistePajaro(pajaro);
+                    } catch (ErrorNoExistePajaro e) {
+                        System.out.println(e.getMessage());
                     }
+
                     Mensajes.volverBuscarPajaro();
                 }
                 case 4 -> agregarStockEspecie();
-                case 5 -> {
-                    return;
-                }
+                case 5 -> { return; }
             }
         } while (Repetir.deseaRepetirAccion());
     }
@@ -147,26 +153,35 @@ public class GestorPajaros {
     }
 
     /**
-     * Permite agregar un nuevo pájaro
+     * Comprueba si existe la especie, y si no es así, procede a agregarlo
      */
     public static void agregarPajaro(){
-        basePajaros.add(new Pajaro(ingresarEspecie(), ingresarColor(), ingresarPrecio(), ingresarStock()));
-        Mensajes.agregadoPajaroConExito();
+        try{
+            String especie = ingresarEspecie();
+            Validador.yaExisteEspecie(especie, basePajaros);
+
+            Pajaro pajaro = new Pajaro(especie, ingresarColor(), ingresarPrecio(), ingresarStock());
+            basePajaros.add(pajaro);
+            Mensajes.agregadoPajaroConExito();
+        } catch (ErrorYaExisteEspecie e) {
+            System.out.println(e.getMessage());
+        }
+
         Mensajes.agregarOtroPajaro();
     }
 
     /**
-     * Busca en la base de datos de pájaros por especie
-     * @return Pájaro Si existe la especie, en caso contrario devuelve null
+     * Busca en la base de datos el pájaro por su especie
+     *
+     * @return {@code Pájaro} Si existe la especie, en caso contrario devuelve {@code null}
      */
     public static Pajaro busquedaPorEspecie(){
         String especie = ingresarEspecie();
-        Mensajes.tipoEspecie(especie);
 
         for (Pajaro pajaro: basePajaros){
             if(pajaro.getEspecie().equalsIgnoreCase(especie)){
                 Mensajes.mostrarPajaro(pajaro);
-                return pajaro;
+                return pajaro;                      // TODO Si hay varis loros devuelve el primero
             }
         }
         return null;
@@ -184,17 +199,18 @@ public class GestorPajaros {
     }
 
     /**
-     * Permite agregar más cantidad al stock de la especie del pájaro que ingresemos.
+     * Agrega más cantidad de unidades al stock de la especie del pájaro que ingresemos.
      */
     public static void agregarStockEspecie(){
         Pajaro pajaro = busquedaPorEspecie();
 
-        if (pajaro != null) {
+        try {
+            Validador.noExistePajaro(pajaro);
             int cantidad = ingresarStock();
             pajaro.setStock(pajaro.getStock() + cantidad);
             Mensajes.modificadoStock();
-        }else{
-            Mensajes.noExistePajaro();
+        } catch (ErrorNoExistePajaro e) {
+            System.out.println(e.getMessage());
         }
 
         Mensajes.modificarOtraVezStock();
@@ -205,7 +221,7 @@ public class GestorPajaros {
      * Si ingresa "S" vuelve al menu pájaros, si no vuelve al menu principal.
      * Si el usuario selecciono la opción 5 no se ejecuta.
      *
-     * @param opc Valor numérico ingresado por el usuario cuando se le solicitó en el menu pájaros
+     * @param opc Valor numérico ingresado por el usuario en el menu pájaros
      */
     public static void seguirMenuPajaros(int opc){
         if (opc != 5){

@@ -12,7 +12,7 @@ public class Venta {
     private double total;
 
     /**
-     * Parámetros para crear una venta
+     * Información de la venta
      *
      * @param cliente Cliente que realiza la compra
      * @param lineasDeVenta Arraylist con todos los pájaros comprados
@@ -22,7 +22,7 @@ public class Venta {
         this.cliente = cliente;
         this.lineasDeVenta = lineasDeVenta;
         this.fecha = fecha;
-        this.total = 0.00;
+        this.total = 0.00; // Inicializado por defecto en 0.00 para que no se pueda ingresar un valor a la hora crear una instancia
     }
 
     /** @return Cliente que hace la compra */
@@ -38,6 +38,11 @@ public class Venta {
     /** @return  Dia de la compra */
     public String getFecha() {
         return fecha;
+    }
+
+    /** @return  Importe total de la compra */
+    public double getTotal() {
+        return total;
     }
 
     /** @param cliente Nuevo cliente */

@@ -5,14 +5,15 @@ import excepciones.ValorFueraRangoExcepcion;
 import java.util.Scanner;
 
 /**
- * Clase para seleccionar una opción de los menus del programa
+ * Clase para seleccionar una opción del menú que esté visualizando el usuario
  */
 public class SelectorOpciones {
 
     /**
-     * Solicita al usuario el ingreso de un numéro dentro del rango del menu mostrado.
-     * @param limite Es el numéro máximo permitido.
-     * @return Opc puede ser la opción seleccionada o -1.
+     * Solicita al usuario el ingreso de un número dentro del rango del menú mostrado.
+     *
+     * @param limite Número máximo permitido.
+     * @return Opción seleccionada o {@code -1} si ingresa un valor no válido.
      */
     public static int elegir_opcion(int limite) {
         Scanner scanner = new Scanner(System.in);

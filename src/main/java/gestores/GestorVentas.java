@@ -7,16 +7,27 @@ import util.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import static gestores.GestorPajaros.*;
 import static gestores.GestorClientes.baseClientes;
 import static util.SelectorOpciones.elegir_opcion;
 
 /**
- * Clase que controla las ventas
+ * Clase que gestiona el proceso de venta y su historial.
+ *
+ * @author Jose Iglesias
+ * @version 3.0
  */
 public class GestorVentas {
-    static ArrayList<Venta> baseVentas = new ArrayList<>();
+    static ArrayList<Venta> baseVentas = new ArrayList<>(
+            List.of(new Venta(
+                    new Cliente("JUAN", "45454545F", "654545454", "jj@jj.com"),
+                    new ArrayList<>(
+                    List.of(new Pajaro("LORO", "VERDE", 5.23, 10))),
+                    "2025-09-20"
+            ))
+    );
 
     /**
      * Inicia el proceso de venta.
@@ -25,7 +36,7 @@ public class GestorVentas {
     public static void iniciarVenta(){
         try {
             Validador.validandoBaseClientes(baseClientes);
-            Validador.validandoBasPajaros(basePajaros);
+            Validador.validandoBasePajaros(basePajaros);
             String dni = GestorClientes.ingresarDni();
             Cliente cliente = GestorClientes.buscarPorDni(dni);
             Validador.validandoExistenciaCliente(cliente);
@@ -52,26 +63,22 @@ public class GestorVentas {
             Mensajes.comprarPajaro();
             Pajaro pajaro = busquedaPorEspecie();
 
-            if(pajaro != null){
+            try{
+                Validador.noExistePajaro(pajaro);
                 int cantidad = ingresarStock();
+                Validador.noHayStock(cantidad, pajaro);
 
-                if (pajaro.getStock() - cantidad >= 0){
-                    venta.getLineasDeVenta().add(pajaro);
-                    total += calcularPrecioFinal(pajaro.getPrecio(), cantidad);
-                    pajaro.setStock(pajaro.getStock() - cantidad);
-
-                } else{
-                    Mensajes.noHayStockSuficiente(pajaro.getStock());
-                }
-            }
-             else{
-                Mensajes.noExistePajaro();
+                venta.getLineasDeVenta().add(pajaro);
+                total += calcularPrecioFinal(pajaro.getPrecio(), cantidad);
+                pajaro.setStock(pajaro.getStock() - cantidad);
+            } catch (ErrorNoExistePajaro | ErrorNoHayStock e) {
+                System.out.println(e.getMessage());
             }
 
             Mensajes.volverComprarPajaro();
             seguirAgregando = Repetir.deseaRepetirAccion();
         }
-        venta.setTotal(total);
+        venta.setTotal(total); // Modifica el valor predefinido en la clase Ventas
         imprimirTicket(venta);
     }
 
@@ -103,11 +110,12 @@ public class GestorVentas {
      * @param venta Venta con toda la información de la venta
      */
     public static void imprimirTicket(Venta venta){
-        if (!venta.getLineasDeVenta().isEmpty()){
-            Mensajes.compraTotal(venta);
+        try {
+            Validador.cestaVacia(venta);
+            Mensajes.ticketCompra(venta);
             baseVentas.add(venta);
-        }else{
-            Mensajes.cestaVacia();
+        } catch (ErrorCestaVacia e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -115,7 +123,8 @@ public class GestorVentas {
      * Muestra el menu de ventas totales para ver el historial de ventas.
      */
     public static void ejecutarMenuVentasTotales(){
-        if (!baseVentas.isEmpty()){
+        try {
+            Validador.baseVentasVacia(baseVentas);
             Mensajes.menuMostrarVentas();
             int opc = elegir_opcion(5);
 
@@ -134,8 +143,8 @@ public class GestorVentas {
                 }
             }
             seguirMenuMostrarVentas();
-        }else{
-            Mensajes.noHayVentas();
+        } catch (ErrorBaseVentasVacia e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -144,22 +153,23 @@ public class GestorVentas {
      */
     public static void mostrarVentasTotales(){
         for (Venta venta: baseVentas){
-            Mensajes.mostrarVentasTotales(venta);
+            Mensajes.ticketCompra(venta);
         }
     }
 
     /**
      * Obtiene todas las ventas realizadas por un cliente
      *
-     * @return ArrayList con las ventas de un cliente si existe, si no Null.
+     * @return ArrayList con las ventas de un cliente si existe, si no {@code null}.
      */
     public static ArrayList<Venta> obtenerVenta(){
         String dni = GestorClientes.ingresarDni();
         Cliente cliente = GestorClientes.buscarPorDni(dni);
-        ArrayList<Venta> ventasCliente = new ArrayList<>();
 
         try{
             Validador.validandoExistenciaCliente(cliente);
+
+            ArrayList<Venta> ventasCliente = new ArrayList<>();
             for (Venta venta : baseVentas) {
                 if (venta.getCliente().getDni().equals(cliente.getDni())) {
                     ventasCliente.add(venta);
@@ -180,11 +190,12 @@ public class GestorVentas {
     public static void mostrarVentasTotalesPorCliente(){
         ArrayList<Venta> ventasClientes = obtenerVenta();
 
-        if (ventasClientes != null){
-            for (Venta venta : ventasClientes) {
-                Mensajes.mostrarVentasTotales(venta);
-            }
+        if (ventasClientes == null){ return;}
+
+        for (Venta venta : ventasClientes) {
+            Mensajes.ticketCompra(venta);
         }
+
     }
 
     /**
@@ -207,18 +218,18 @@ public class GestorVentas {
     public static void mostrarImporteTotalVentasPorCliente(){
         ArrayList<Venta> ventasClientes = obtenerVenta();
 
-        if(ventasClientes != null) {
-            double totalVentas = 0.00;
-            String cliente = "";
+        if (ventasClientes == null){ return;}
 
-            for (Venta venta : ventasClientes) {
-                cliente = venta.getCliente().getNombre();
-                for (Pajaro pajaro : venta.getLineasDeVenta()) {
-                    totalVentas += pajaro.getPrecio();
-                }
+        double totalVentas = 0.00;
+        String cliente = "";
+
+        for (Venta venta : ventasClientes) {
+            cliente = venta.getCliente().getNombre();
+            for (Pajaro pajaro : venta.getLineasDeVenta()) {
+                totalVentas += pajaro.getPrecio();
             }
-            Mensajes.importeTotalVentasCliente(cliente, totalVentas);
         }
+        Mensajes.importeTotalVentasCliente(cliente, totalVentas);
     }
 
     /**

@@ -10,7 +10,7 @@ public class Cliente {
     private String email;
 
     /**
-     * Parámetros para crear un nuevo cliente
+     * Información del nuevo cliente
      *
      * @param nombre Nombre cliente
      * @param dni   DNI cliente
