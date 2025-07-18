@@ -10,7 +10,7 @@ public class Repetir {
     /**
      * Permite volver a ejecutar el proceso que acaba de finalizar.
      *
-     * @return Boolean True si ingresa S. False si no.
+     * @return Boolean {@code true} si ingresa "S". {@code false} si no.
      */
     public static boolean deseaRepetirAccion(){
         Scanner scanner = new Scanner(System.in);
