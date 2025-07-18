@@ -47,20 +47,20 @@ cd Pajareria
 
 ### 💻 Ejecución desde Consola
 ```
-1. Compilar el programa: javac src/main/java/Main.java
-2. Ejecutar programa: java -cp src/main/java Main
+1. Compilar el programa: javac src/main/java/main.Main.java
+2. Ejecutar programa: java -cp src/main/java main.Main
 ```
 
 ### 🧠 Ejecución desde IntelliJ
 ```
 1. Abre el proyecto
-2. Ejecuta Run en Main.java
+2. Ejecuta Run en main.Main.java
 ```
 ---
 
 ## 🛠️ Instrucciones de uso
 
-Al ejecutar el archivo `Main.java`, se iniciará el programa. Lo primero que veremos es el menú principal:
+Al ejecutar el archivo `main.Main.java`, se iniciará el programa. Lo primero que veremos es el menú principal:
 
 
 ======= MENÚ PRINCIPAL =======
