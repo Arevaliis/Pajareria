@@ -111,7 +111,7 @@ Al finalizar el proceso, el programa nos preguntará:
 
 ---
 ## 📄 Licencia
-Este proyecto está bajo Licencia - mira el archivo LICENSE.md para más detalles
+Este proyecto no tiene licencia.
 
 ---
 ## 📫 Contacto

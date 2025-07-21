@@ -7,12 +7,13 @@ import modelos.Venta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Clase para validar los valores ingresados por el usuario mediante la consola
  *
  * @author Jose Iglesias
- * @version 3.0
+ * @version 4.0
  */
 public class Validador {
 
@@ -30,14 +31,18 @@ public class Validador {
     }
 
     /**
-     * Comprueba que el nombre no contenga ni números ni símbolos.
+     * Comprueba que el nombre no contenga ni números ni símbolos y tenga al menos 3 letras.
      *
      * @param nombre Nombre ingresado
      * @throws ErrorIngresoNombreException si el nombre contiene un número o un símbolo
      */
     public static void validandoNombre(String nombre) throws ErrorIngresoNombreException {
-        if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+")){
-            throw new ErrorIngresoNombreException("\nError -> Valor mal ingresado. El nombre solo puede contener letras.");
+        if (nombre.length() < 3){
+            throw new ErrorIngresoNombreException("\nError -> El nombre debe contener al menos 3 letras.");
+        }
+
+        if (!nombre.matches("^[A-Za-zÁÉÍÓÚáéíóúÑñ]+$")) {
+            throw new ErrorIngresoNombreException("\nError -> El nombre solo puede contener letras.");
         }
     }
 
@@ -45,11 +50,15 @@ public class Validador {
      * Valida que el DNI este en el formato correcto
      *
      * @param dni DNI ingresado
-     * @throws ErrorIngresoDniException si el usuario no cumple con el formato del DNI. 8 números y 1 letra.
+     * @throws ErrorIngresoDniException si el dno no contiene 8 números y 1 letra.
      */
-    public static void valindandoDni(String dni) throws ErrorIngresoDniException {
-        if (!dni.matches("^\\d{8}[A-Za-z]$")){
-            throw new ErrorIngresoDniException("\nError -> Valor mal ingresado. El dni debe tener 8 números y 1 letra al final.");
+    public static void validandoDni(String dni) throws ErrorIngresoDniException {
+        if (!dni.matches("^\\d{8}.*")) {
+            throw new ErrorIngresoDniException("\nError -> El DNI debe comenzar con 8 dígitos.");
+        }
+
+        if (!dni.matches(".*[A-Za-z]$")) {
+            throw new ErrorIngresoDniException("\nError -> El DNI debe terminar con una letra.");
         }
     }
 
@@ -60,7 +69,7 @@ public class Validador {
      * @param baseClientes Arraylist de {@code Clientes}
      * @throws ErrorDniDuplicado si el dni ya existe
      */
-    public static void dniDuplicado(String dni, ArrayList<Cliente> baseClientes) throws ErrorDniDuplicado {
+    public static void validandoDniDuplicado(String dni, ArrayList<Cliente> baseClientes) throws ErrorDniDuplicado {
         for (Cliente cliente : baseClientes) {
             if (cliente.getDni().equalsIgnoreCase(dni)) {
                 throw new ErrorDniDuplicado("\nError: Ya existe un cliente registrado con ese DNI.");
@@ -75,8 +84,12 @@ public class Validador {
      * @throws ErrorIngresoTelefonoException si el teléfono ingresado no empieza por 6,7,8 o 9 y 8 números más.
      */
     public static void validandoTelefono(String telefono) throws ErrorIngresoTelefonoException {
-        if (!telefono.matches("^[6789]\\d{8}$")){
-            throw new ErrorIngresoTelefonoException("\nError -> Valor mal ingresado. Deben empezar por (6,7,8,9) y luego 8 números mas.");
+        if (!telefono.matches("^[6789].*")) {
+            throw new ErrorIngresoTelefonoException("\nError -> El teléfono debe comenzar por 6, 7, 8 o 9.");
+        }
+
+        if (!telefono.matches("^\\d{9}$")) {
+            throw new ErrorIngresoTelefonoException("\nError -> El teléfono debe tener exactamente 9 dígitos.");
         }
     }
 
@@ -102,8 +115,42 @@ public class Validador {
      * @throws ErrorIngresoEmailException si el email ingresado no es válido
      */
     public static void validandoEmail(String email) throws ErrorIngresoEmailException {
-        if (!email.matches("^[\\w.-]+@[a-zA-Z\\d.-]+\\.[a-zA-Z]{2,}$")){
-            throw new ErrorIngresoEmailException("\nError -> Valor mal ingresado. El email debe tener formato válido: usuario@dominio.extensión (mínimo 2 letras)");
+        int indiceArroba = email.indexOf("@");
+
+        if (indiceArroba == -1){
+            throw new ErrorIngresoEmailException("\nError -> El email debe tener @");
+        }
+
+        ArrayList<String> dominiosComunes = new ArrayList<>(
+                List.of(
+                        "@gmail.com",
+                        "@hotmail.com",
+                        "@outlook.com",
+                        "@yahoo.com",
+                        "@yahoo.es",
+                        "@icloud.com",
+                        "@live.com",
+                        "@live.es",
+                        "@protonmail.com",
+                        "@aol.com",
+                        "@msn.com",
+                        "@gmx.com",
+                        "@gmx.es",
+                        "@zoho.com",
+                        "@mail.com"
+                )
+        );
+        String usuario = email.substring(0, indiceArroba);
+
+        if (!usuario.matches("^[\\w.-]+$")) {
+            throw new ErrorIngresoEmailException("\nError -> Usuario mal ingresado. Debe contener al menos 1 carácter válido.");
+        }
+
+        String dominio = email.substring(indiceArroba);
+
+        if (!dominiosComunes.contains(dominio)){
+            String mensaje = String.join(", ", dominiosComunes);
+            throw new ErrorIngresoEmailException("\nError -> Dominio no permitido. Debe usar uno de estos dominios: " + mensaje);
         }
     }
 

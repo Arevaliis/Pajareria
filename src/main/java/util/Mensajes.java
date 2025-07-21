@@ -74,7 +74,7 @@ public class Mensajes {
                     3. Importe total de cada venta
                     4. Gasto total de cliente
                     5. Volver
-                ======================================
+                =============================================
                 """);
     }
 
@@ -263,6 +263,6 @@ public class Mensajes {
 
     /** Muestra el importe total de cada venta */
     public static void mensajeTotalVenta(int contador, double total){
-        System.out.print(contador + ". Venta: " + total + "€");
+        System.out.printf("%d. Venta: %.2f€\n", contador, total);
     }
 }
