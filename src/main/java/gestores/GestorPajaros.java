@@ -7,7 +7,6 @@ import util.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -15,24 +14,23 @@ import java.util.Scanner;
  * incluyendo agregar pájaro, buscar por especie, mostrar el inventario y agregar stock.
  *
  * @author Jose Iglesias
- * @version 3.0
+ * @version 4.0
  */
 public class GestorPajaros {
-    static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Pajaro> basePajaros = new ArrayList<>(
-            List.of(new Pajaro("LORO", "VERDE", 5.23, 10))
-    );
 
     /**
      * Muestra el menu pájaros hasta que el usuario elija una opción válida
+     *
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      */
-    public static void ejecutarMenuPajaros(){
+    public static void ejecutarMenuPajaros(ArrayList<Pajaro> basePajaros, Scanner scanner){
         int opc;
         do {
             Mensajes.menuPajaros();
-            opc = SelectorOpciones.elegir_opcion(5);
-            comprobarBaseDatosPajarosVacia(opc);
-            seguirMenuPajaros(opc);
+            opc = SelectorOpciones.elegir_opcion(5, scanner);
+            comprobarBaseDatosPajarosVacia(opc, basePajaros, scanner);
+            seguirMenuPajaros(opc, basePajaros, scanner);
         }while (opc == -1);
     }
 
@@ -42,12 +40,14 @@ public class GestorPajaros {
      * Si ingresa otro valor, saltará un mensaje de advertencia.
      *
      * @param opc Número ingresado por el usuario
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      */
-    public static void comprobarBaseDatosPajarosVacia(int opc){
+    public static void comprobarBaseDatosPajarosVacia(int opc, ArrayList<Pajaro> basePajaros, Scanner scanner){
         if (basePajaros.isEmpty() && opc != 1 && opc != 5 ){
             Mensajes.basePajarosVacia();
         } else {
-            ejecutarOpcionMenuPajaros(opc);
+            ejecutarOpcionMenuPajaros(opc, basePajaros, scanner);
         }
     }
 
@@ -55,18 +55,20 @@ public class GestorPajaros {
      * Ejecuta la opción elegida por el usuario.
      *
      * @param opc Número ingresado
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      */
-    public static void ejecutarOpcionMenuPajaros(int opc){
+    public static void ejecutarOpcionMenuPajaros(int opc, ArrayList<Pajaro> basePajaros, Scanner scanner){
         do {
             switch (opc) {
-                case 1 -> agregarPajaro();
+                case 1 -> agregarPajaro(basePajaros, scanner);
                 case 2 -> {
-                    listarPajaros();
+                    listarPajaros(basePajaros);
                     return;
                 }
                 case 3 -> {
                     try{
-                        Pajaro pajaro = busquedaPorEspecie();
+                        Pajaro pajaro = busquedaPorEspecie(basePajaros, scanner);
                         Validador.noExistePajaro(pajaro);
                     } catch (ErrorNoExistePajaro e) {
                         System.out.println(e.getMessage());
@@ -74,18 +76,19 @@ public class GestorPajaros {
 
                     Mensajes.volverBuscarPajaro();
                 }
-                case 4 -> agregarStockEspecie();
+                case 4 -> agregarStockEspecie(basePajaros, scanner);
                 case 5 -> { return; }
             }
-        } while (Repetir.deseaRepetirAccion());
+        } while (Repetir.deseaRepetirAccion(scanner));
     }
 
     /**
      * Pide al usuario que ingrese la especie del pájaro
      *
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      * @return String con la especie del pájaro
      */
-    public static String ingresarEspecie(){
+    public static String ingresarEspecie(Scanner scanner){
         while (true){
             try {
                 Mensajes.mensajeEspecie();
@@ -101,9 +104,10 @@ public class GestorPajaros {
     /**
      * Pide al usuario que ingrese el color del pájaro
      *
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      * @return String con el color del pájaro
      */
-    public static String ingresarColor(){
+    public static String ingresarColor(Scanner scanner){
         while (true){
             try {
                 Mensajes.mensajeColor();
@@ -119,9 +123,10 @@ public class GestorPajaros {
     /**
      * Pide al usuario que ingrese el precio del pájaro
      *
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      * @return double con el precio del pájaro
      */
-    public static double ingresarPrecio(){
+    public static double ingresarPrecio(Scanner scanner){
         while (true){
             try {
                 Mensajes.mensajePrecio();
@@ -137,8 +142,8 @@ public class GestorPajaros {
      *
      * @return  int con la cantidad disponible del pájaro
      */
-    public static int ingresarStock(){
-       while (true){
+    public static int ingresarStock(Scanner scanner){
+        while (true){
            try {
                Mensajes.mensajeStock();
                int cantidad = Integer.parseInt(scanner.nextLine());
@@ -154,13 +159,16 @@ public class GestorPajaros {
 
     /**
      * Comprueba si existe la especie, y si no es así, procede a agregarlo
+     *
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      */
-    public static void agregarPajaro(){
+    public static void agregarPajaro(ArrayList<Pajaro> basePajaros, Scanner scanner){
         try{
-            String especie = ingresarEspecie();
+            String especie = ingresarEspecie(scanner);
             Validador.yaExisteEspecie(especie, basePajaros);
 
-            Pajaro pajaro = new Pajaro(especie, ingresarColor(), ingresarPrecio(), ingresarStock());
+            Pajaro pajaro = new Pajaro(especie, ingresarColor(scanner), ingresarPrecio(scanner), ingresarStock(scanner));
             basePajaros.add(pajaro);
             Mensajes.agregadoPajaroConExito();
         } catch (ErrorYaExisteEspecie e) {
@@ -173,15 +181,17 @@ public class GestorPajaros {
     /**
      * Busca en la base de datos el pájaro por su especie
      *
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      * @return {@code Pájaro} Si existe la especie, en caso contrario devuelve {@code null}
      */
-    public static Pajaro busquedaPorEspecie(){
-        String especie = ingresarEspecie();
+    public static Pajaro busquedaPorEspecie(ArrayList<Pajaro> basePajaros, Scanner scanner){
+        String especie = ingresarEspecie(scanner);
 
         for (Pajaro pajaro: basePajaros){
             if(pajaro.getEspecie().equalsIgnoreCase(especie)){
                 Mensajes.mostrarPajaro(pajaro);
-                return pajaro;                      // TODO Si hay varis loros devuelve el primero
+                return pajaro;
             }
         }
         return null;
@@ -189,8 +199,10 @@ public class GestorPajaros {
 
     /**
      * Ordena la base de datos de pájaros y la muestra por pantalla.
+     *
+     * @param basePajaros ArrayList de Pájaros
      */
-    public static void listarPajaros(){
+    public static void listarPajaros(ArrayList<Pajaro> basePajaros){
         basePajaros.sort(Comparator.comparing(Pajaro::getEspecie));
 
         for (Pajaro pajaro: basePajaros){
@@ -200,13 +212,16 @@ public class GestorPajaros {
 
     /**
      * Agrega más cantidad de unidades al stock de la especie del pájaro que ingresemos.
+     *
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      */
-    public static void agregarStockEspecie(){
-        Pajaro pajaro = busquedaPorEspecie();
+    public static void agregarStockEspecie(ArrayList<Pajaro> basePajaros, Scanner scanner){
+        Pajaro pajaro = busquedaPorEspecie(basePajaros, scanner);
 
         try {
             Validador.noExistePajaro(pajaro);
-            int cantidad = ingresarStock();
+            int cantidad = ingresarStock(scanner);
             pajaro.setStock(pajaro.getStock() + cantidad);
             Mensajes.modificadoStock();
         } catch (ErrorNoExistePajaro e) {
@@ -222,12 +237,14 @@ public class GestorPajaros {
      * Si el usuario selecciono la opción 5 no se ejecuta.
      *
      * @param opc Valor numérico ingresado por el usuario en el menu pájaros
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
      */
-    public static void seguirMenuPajaros(int opc){
+    public static void seguirMenuPajaros(int opc, ArrayList<Pajaro> basePajaros, Scanner scanner ){
         if (opc != 5){
             Mensajes.mensajeVolverMenuPajaros();
-            if (Repetir.deseaRepetirAccion()){
-                ejecutarMenuPajaros();
+            if (Repetir.deseaRepetirAccion(scanner)){
+                ejecutarMenuPajaros(basePajaros, scanner);
             }
         }
     }
