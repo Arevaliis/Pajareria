@@ -150,6 +150,11 @@ public class Mensajes {
         System.out.println("El " + campo + " ha sido modificado de " + valorAntiguo + " a " + valorNuevo);
     }
 
+    /** Informa al cliente que el proceso de modificacion ha sido cancelado */
+    public static void modificacionAbortada(){
+        System.out.println("Modificación abortada.");
+    }
+
     /** Muestra un mensaje con la información del cliente */
     public static void mostrarCliente(Cliente cliente){
         System.out.println(cliente);
@@ -199,7 +204,12 @@ public class Mensajes {
 
     /** Pide la cantidad de unidades para el inventario del pájaro */
     public static void mensajeStock(){
-        System.out.print("Ingrese la cantidad de unidades: ");
+        System.out.print("Ingrese la cantidad de unidades (Si desea cancelar ingrese 0): ");
+    }
+
+    /** Informa al usuario que ha cancelado el proceso de agregar stock al producto */
+    public static void procesoStockAbortado(){
+        System.out.println("El proceso de agregar stock al inventario se ha cancelado");
     }
 
     /** Confirma el ingreso de un nuevo pájaro */

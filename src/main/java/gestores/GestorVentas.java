@@ -128,22 +128,19 @@ public class GestorVentas {
     public static void ejecutarMenuVentasTotales(ArrayList<Cliente> baseClientes, ArrayList<Venta> baseVentas, Scanner scanner){
         try {
             Validador.baseVentasVacia(baseVentas);
-            Mensajes.menuMostrarVentas();
-            int opc = elegir_opcion(5, scanner);
 
-            while (opc == -1) {
+            int opc;
+            do {
                 Mensajes.menuMostrarVentas();
                 opc = elegir_opcion(5, scanner);
-            }
+            } while (opc == -1);
 
             switch (opc) {
                 case 1 -> mostrarVentasTotales(baseVentas);
                 case 2 -> mostrarVentasTotalesPorCliente(baseClientes, baseVentas, scanner);
                 case 3 -> mostrarImporteTotalPorVenta(baseVentas);
                 case 4 -> mostrarImporteTotalVentasPorCliente(baseClientes, baseVentas, scanner);
-                case 5 -> {
-                    return;
-                }
+                case 5 -> {return;}
             }
             seguirMenuMostrarVentas(baseClientes, baseVentas, scanner);
         } catch (ErrorBaseVentasVacia e) {

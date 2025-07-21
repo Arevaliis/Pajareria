@@ -290,8 +290,8 @@ public class Validador {
      * @throws ErrorValorInferiorCero Error si la cantidad ingresada es menor a 1.
      */
     public static void validandoCantidadStock(int cantidad) throws ErrorValorInferiorCero{
-        if (cantidad < 1){
-            throw new ErrorValorInferiorCero("\nError -> La cantidad a ingresar no puede ser menor de 1.");
+        if (cantidad < 0){
+            throw new ErrorValorInferiorCero("\nError -> La cantidad a ingresar no puede ser menor de 0.");
         }
     }
 
