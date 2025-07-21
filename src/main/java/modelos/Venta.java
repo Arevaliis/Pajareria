@@ -82,7 +82,7 @@ public class Venta {
                     Cliente: %s
                     Pájaros: %s
                     Total: %.2f€
-                ------------------------------
+                -----------------------------
                 Fecha: %s
                 -----------------------------""".formatted(this.cliente.getNombre(), pajarosComprados, this.total, this.fecha);
     }
