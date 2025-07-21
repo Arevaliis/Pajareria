@@ -299,6 +299,8 @@ public class GestorClientes {
                 case "EMAIL" -> cliente.setEmail(valorNuevo);
             }
             Mensajes.campoModificado(campo, valorNuevo, valorAntiguo);
+        }else{
+            Mensajes.modificacionAbortada();
         }
     }
 

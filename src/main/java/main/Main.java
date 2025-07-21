@@ -7,7 +7,6 @@ import modelos.Venta;
 import util.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import static util.Repetir.deseaRepetirAccion;
@@ -20,23 +19,9 @@ import static util.SelectorOpciones.elegir_opcion;
  * @version 4.0
  */
 public class Main {
-    public static ArrayList<Cliente> baseClientes = new ArrayList<>(
-            List.of(new Cliente("JUAN", "45454545F", "654545454", "jj@jj.com"),
-                    new Cliente("JOSE", "54545454A", "654454545", "aa@jj.com"))
-    );
-
-    public static ArrayList<Pajaro> basePajaros = new ArrayList<>(
-            List.of(new Pajaro("LORO", "VERDE", 5.23, 10))
-    );
-
-    static ArrayList<Venta> baseVentas = new ArrayList<>(
-            List.of(new Venta(
-                    new Cliente("JUAN", "45454545F", "654545454", "jj@jj.com"),
-                    new ArrayList<>(
-                            List.of(new Pajaro("LORO", "VERDE", 5.23, 10))),
-                    "2025-09-20"
-            ))
-    );
+    public static ArrayList<Cliente> baseClientes = new ArrayList<>();
+    public static ArrayList<Pajaro> basePajaros = new ArrayList<>();
+    public static ArrayList<Venta> baseVentas = new ArrayList<>();
 
     /**
      * Método principal que inicia con el menú principal del programa.

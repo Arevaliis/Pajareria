@@ -223,7 +223,12 @@ public class GestorPajaros {
             Validador.noExistePajaro(pajaro);
             int cantidad = ingresarStock(scanner);
             pajaro.setStock(pajaro.getStock() + cantidad);
-            Mensajes.modificadoStock();
+
+            if (cantidad > 0){
+                Mensajes.modificadoStock();
+            }else{
+                Mensajes.procesoStockAbortado();
+            }
         } catch (ErrorNoExistePajaro e) {
             System.out.println(e.getMessage());
         }
