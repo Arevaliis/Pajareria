@@ -14,7 +14,8 @@ public class SelectorOpciones {
      *
      * @param limite Número máximo permitido.
      * @param scanner Scanner para leer los valores ingresados por el usuario
-     * @return Opción seleccionada o {@code -1} si ingresa un valor no válido.
+     *
+     * @return Opción seleccionada o {@code -1} si ingresa un valor fuera del rango.
      */
     public static int elegir_opcion(int limite, Scanner scanner) {
         int opc;
@@ -22,9 +23,9 @@ public class SelectorOpciones {
         try {
             System.out.print("Elija una opción: ");
             opc = Integer.parseInt(scanner.nextLine().trim());
-            Validador.validandoRango(opc, limite);
+            Validador.validarRango(opc, limite);
         } catch (NumberFormatException e) {
-            System.out.println("\nError -> No puede ingresar valores no numéricos.");
+            System.out.println("\nError -> No puede ingresar un valor no numérico.");
             return -1;
         } catch (ValorFueraRangoExcepcion e) {
             System.out.println(e.getMessage());
