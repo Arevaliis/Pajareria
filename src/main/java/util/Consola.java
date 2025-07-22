@@ -6,6 +6,12 @@ import modelos.Cliente;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Clase para ingresar valores por el usuario mediante la consola
+ *
+ * @author Jose Iglesias
+ * @version 4.0
+ */
 public class Consola {
     /**
      * Pide al usuario que ingrese el nombre del cliente y comprueba que sea válido
