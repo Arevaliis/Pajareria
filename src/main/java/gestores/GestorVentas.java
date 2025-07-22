@@ -7,13 +7,12 @@ import util.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-import static gestores.GestorPajaros.*;
-import static util.SelectorOpciones.elegir_opcion;
-
 /**
- * Clase que gestiona el proceso de venta y su historial.
+ * Clase que gestiona el proceso de venta.
  *
  * @author Jose Iglesias
  * @version 4.0
@@ -31,13 +30,13 @@ public class GestorVentas {
      */
     public static void iniciarVenta(ArrayList<Cliente> baseClientes, ArrayList<Pajaro> basePajaros, ArrayList<Venta> baseVentas, Scanner scanner){
         try {
-            Validador.validandoBaseClientes(baseClientes);
-            Validador.validandoBasePajaros(basePajaros);
-            String dni = GestorClientes.ingresarDni(scanner);
+            Validador.validarBaseClientesVacia(baseClientes);
+            Validador.validarBasePajarosVacia(basePajaros);
+            String dni = Consola.ingresarDni(scanner);
             Cliente cliente = GestorClientes.buscarPorDni(dni, baseClientes);
-            Validador.validandoExistenciaCliente(cliente);
+            Validador.validarExistenciaCliente(cliente);
 
-            crearVenta(new Venta(cliente, new ArrayList<>(), obtenerFecha()), basePajaros, baseVentas, scanner); // Pasa como parametro lka instancia de Venta creada
+            crearVenta(new Venta(cliente, new ArrayList<>(), obtenerFecha()), basePajaros, baseVentas, scanner);
         }catch (ErrorBaseDatosClientesVacia | ErrorBaseDatosPajarosVacia | ErrorClienteNoExiste e){
             System.out.println(e.getMessage());
         }
@@ -47,7 +46,7 @@ public class GestorVentas {
      * Continúa el proceso de venta.
      * Agrega las especies y la cantidad que le pida el cliente.
      *
-     * @param venta Instancia de venta creada anteriormente
+     * @param venta Instancia de venta
      * @param basePajaros ArrayList de Pájaros
      * @param baseVentas ArrayList de Ventas
      * @param scanner Scanner para leer los valores ingresados por el usuario
@@ -55,21 +54,27 @@ public class GestorVentas {
     public static void crearVenta(Venta venta, ArrayList<Pajaro> basePajaros, ArrayList<Venta> baseVentas, Scanner scanner){
         boolean seguirAgregando = true;
         double total = 0.00;
+        HashMap<Pajaro, Integer> cantidadEspecie = new HashMap<>();
 
         while (seguirAgregando){
             Mensajes.tituloEspecies();
-            listarPajaros(basePajaros);
+            GestorPajaros.listarPajaros(basePajaros);
             Mensajes.comprarPajaro();
-            Pajaro pajaro = busquedaPorEspecie(basePajaros, scanner);
+            Pajaro pajaro = GestorPajaros.busquedaPorEspecie(basePajaros, scanner);
 
             try{
-                Validador.noExistePajaro(pajaro);
-                int cantidad = ingresarStock(scanner);
-                Validador.noHayStock(cantidad, pajaro);
+                Validador.validarExistenciaPajaro(pajaro);
+
+                int cantidad = Consola.ingresarStock(scanner);
+                Validador.validarNoHayStock(cantidad, pajaro);
 
                 venta.getLineasDeVenta().add(pajaro);
+
                 total += calcularPrecioFinal(pajaro.getPrecio(), cantidad);
                 pajaro.setStock(pajaro.getStock() - cantidad);
+
+                cantidadEspecie.put(pajaro, cantidad); // Guarda la cantidad de cada pájaro comprado
+
             } catch (ErrorNoExistePajaro | ErrorNoHayStock e) {
                 System.out.println(e.getMessage());
             }
@@ -77,9 +82,36 @@ public class GestorVentas {
             Mensajes.volverComprarPajaro();
             seguirAgregando = Repetir.deseaRepetirAccion(scanner);
         }
-        venta.setTotal(total); // Modifica el valor predefinido en la clase Ventas
-        baseVentas.add(venta);
-        imprimirTicket(venta);
+
+        confirmarVenta(venta, baseVentas, scanner, cantidadEspecie, total);
+    }
+
+    /**
+     * Solicita la confirmación del cliente para la compra.
+     * Si dice N se cancela la venta y devuelve las cantidades agregadas a las especies
+     * Si dice S se ejecuta la venta
+     *
+     * @param venta Instancia de venta
+     * @param baseVentas ArrayList de Ventas
+     * @param scanner Scanner para leer los valores ingresados por el usuario
+     * @param cantidadEspecie HashMap con las especies y cantidades agregadas
+     * @param total Importe total de la venta
+     */
+    public static void confirmarVenta(Venta venta, ArrayList<Venta> baseVentas, Scanner scanner, HashMap<Pajaro, Integer> cantidadEspecie, double total){
+        Mensajes.confirmarCompra();
+        if (Repetir.deseaRepetirAccion(scanner)){
+            venta.setTotal(total);
+            baseVentas.add(venta);
+            imprimirTicket(venta);
+        }else{
+            Mensajes.compraCancelada();
+            // Proceso para devolver el stock original de las especies agregadas
+            for (Map.Entry<Pajaro, Integer> entry : cantidadEspecie.entrySet()) {
+                Pajaro pajaro = entry.getKey();
+                Integer cantidad = entry.getValue();
+                pajaro.setStock(pajaro.getStock() + cantidad);
+            }
+        }
     }
 
     /**
@@ -111,151 +143,10 @@ public class GestorVentas {
      */
     public static void imprimirTicket(Venta venta){
         try {
-            Validador.cestaVacia(venta);
+            Validador.validarCestaCompraVacia(venta);
             Mensajes.ticketCompra(venta);
         } catch (ErrorCestaVacia e) {
             System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Muestra el menu de ventas totales para ver el historial de ventas.
-     *
-     * @param baseClientes ArrayList de clientes
-     * @param baseVentas ArrayList de Ventas
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     */
-    public static void ejecutarMenuVentasTotales(ArrayList<Cliente> baseClientes, ArrayList<Venta> baseVentas, Scanner scanner){
-        try {
-            Validador.baseVentasVacia(baseVentas);
-
-            int opc;
-            do {
-                Mensajes.menuMostrarVentas();
-                opc = elegir_opcion(5, scanner);
-            } while (opc == -1);
-
-            switch (opc) {
-                case 1 -> mostrarVentasTotales(baseVentas);
-                case 2 -> mostrarVentasTotalesPorCliente(baseClientes, baseVentas, scanner);
-                case 3 -> mostrarImporteTotalPorVenta(baseVentas);
-                case 4 -> mostrarImporteTotalVentasPorCliente(baseClientes, baseVentas, scanner);
-                case 5 -> {return;}
-            }
-            seguirMenuMostrarVentas(baseClientes, baseVentas, scanner);
-        } catch (ErrorBaseVentasVacia e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Muestra todas las ventas realizadas
-     *
-     * @param baseVentas ArrayList de Ventas
-     */
-    public static void mostrarVentasTotales(ArrayList<Venta> baseVentas){
-        for (Venta venta: baseVentas){
-            Mensajes.ticketCompra(venta);
-        }
-    }
-
-    /**
-     * Obtiene todas las ventas realizadas por un cliente
-     *
-     * @param baseClientes ArrayList de clientes
-     * @param baseVentas ArrayList de Ventas
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     *
-     * @return ArrayList con las ventas de un cliente si existe, si no {@code null}.
-     */
-    public static ArrayList<Venta> obtenerVenta(ArrayList<Cliente> baseClientes, ArrayList<Venta> baseVentas, Scanner scanner){
-        String dni = GestorClientes.ingresarDni(scanner);
-        Cliente cliente = GestorClientes.buscarPorDni(dni, baseClientes);
-
-        try{
-            Validador.validandoExistenciaCliente(cliente);
-
-            ArrayList<Venta> ventasCliente = new ArrayList<>();
-            for (Venta venta : baseVentas) {
-                if (venta.getCliente().getDni().equals(cliente.getDni())) {
-                    ventasCliente.add(venta);
-                }
-            }
-            Validador.validandoVentasClientes(ventasCliente);
-            return ventasCliente;
-        }catch (ErrorClienteNoExiste | ErrorNoVentasCliente e){
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
-    /**
-     * Muestra todas las ventas del cliente ingresado
-     *
-     * @param baseClientes ArrayList de clientes
-     * @param baseVentas ArrayList de Ventas
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     */
-    public static void mostrarVentasTotalesPorCliente(ArrayList<Cliente> baseClientes, ArrayList<Venta> baseVentas, Scanner scanner){
-        ArrayList<Venta> ventasClientes = obtenerVenta(baseClientes, baseVentas, scanner);
-
-        if (ventasClientes == null){ return;}
-
-        for (Venta venta : ventasClientes) {
-            Mensajes.ticketCompra(venta);
-        }
-
-    }
-
-    /**
-     * Muestra el importe total de cada venta
-     *
-     * @param baseVentas ArrayList de Ventas
-     */
-    public static void mostrarImporteTotalPorVenta(ArrayList<Venta> baseVentas){
-        int contador = 1;
-        for (Venta venta: baseVentas){
-            Mensajes.mensajeTotalVenta(contador++, venta.getTotal());
-        }
-    }
-
-    /**
-     * Muestra el importe total gastado por el cliente ingresado
-     *
-     * @param baseClientes ArrayList de clientes
-     * @param baseVentas ArrayList de Ventas
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     */
-    public static void mostrarImporteTotalVentasPorCliente(ArrayList<Cliente> baseClientes, ArrayList<Venta> baseVentas, Scanner scanner){
-        ArrayList<Venta> ventasClientes = obtenerVenta(baseClientes, baseVentas, scanner);
-
-        if (ventasClientes == null){ return;}
-
-        double totalVentas = 0.00;
-        String cliente = "";
-
-        for (Venta venta : ventasClientes) {
-            cliente = venta.getCliente().getNombre();
-            for (Pajaro pajaro : venta.getLineasDeVenta()) {
-                totalVentas += pajaro.getPrecio();
-            }
-        }
-        Mensajes.importeTotalVentasCliente(cliente, totalVentas);
-    }
-
-    /**
-     * Pregunta al usuario si desea volver al menu ventas totales.
-     * Si ingresa "S" vuelve al menu ventas totales, si no vuelve al menu principal.
-     *
-     * @param baseClientes ArrayList de clientes
-     * @param baseVentas ArrayList de Ventas
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     */
-    public static void seguirMenuMostrarVentas(ArrayList<Cliente> baseClientes, ArrayList<Venta> baseVentas, Scanner scanner){
-        Mensajes.mensajeVolverMenuVentasTotales();
-        if (Repetir.deseaRepetirAccion(scanner)){
-            ejecutarMenuVentasTotales(baseClientes, baseVentas, scanner);
         }
     }
 }

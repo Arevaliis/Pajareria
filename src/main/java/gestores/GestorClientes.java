@@ -66,9 +66,9 @@ public class GestorClientes {
                 case 3 -> modificarCliente(baseClientes, scanner);
                 case 4 -> {
                     try{
-                        String dni = ingresarDni(scanner);
+                        String dni = Consola.ingresarDni(scanner);
                         Cliente cliente = buscarPorDni(dni, baseClientes);
-                        Validador.validandoExistenciaCliente(cliente);
+                        Validador.validarExistenciaCliente(cliente);
                     } catch (ErrorClienteNoExiste e) {
                         System.out.println(e.getMessage());
                     }
@@ -76,11 +76,9 @@ public class GestorClientes {
                 }
                 case 5 -> {
                     listarClientes(baseClientes);
-                    return;
+                    return; // Para evitar el mensaje de volver a ejecutar esta acción, va directo al menú clientes
                 }
-                case 6 -> {
-                    return;
-                }
+                case 6 -> {return;}
             }
         } while (Repetir.deseaRepetirAccion(scanner));
     }
@@ -94,7 +92,6 @@ public class GestorClientes {
      * @return Si existe el cliente devuelve una instancia de {@code Cliente}, si no devolverá {@code null}
      */
     public static Cliente buscarPorDni(String dni, ArrayList<Cliente> baseClientes){
-        // Agregado baseClientes como parametro para poder testearlo
         Cliente cliente = null;
 
         for (Cliente usuario : baseClientes) {
@@ -107,112 +104,41 @@ public class GestorClientes {
     }
 
     /**
-     * Pide al usuario que ingrese el nombre del cliente y comprueba que sea válido
-     *
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     *
-     * @return String con nombre del cliente
-     */
-    public static String ingresarNombre(Scanner scanner){
-        while (true){
-            try {
-                Mensajes.mensajeNombre();
-                String nombre = scanner.nextLine().trim().toUpperCase();
-                Validador.validandoNombre(nombre);
-                return nombre;
-            } catch (ErrorIngresoNombreException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Pide al usuario que ingrese el DNI del cliente y comprueba que sea válido
-     *
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     *
-     * @return String con el DNI del cliente
-     */
-    public static String ingresarDni(Scanner scanner) {
-        String dni;
-        while (true) {
-            try {
-                Mensajes.mensajeDni();
-                dni = scanner.nextLine().trim().toUpperCase();
-                Validador.validandoDni(dni);
-                return dni;
-            } catch (ErrorIngresoDniException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Pide al usuario que ingrese el teléfono del cliente y comprueba que sea válido
-     *
-     * @param baseClientes ArrayList con la base de datos clientes
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     *
-     * @return String Teléfono del cliente
-     */
-    public static String ingresarTelefono(ArrayList<Cliente> baseClientes, Scanner scanner) {
-        String telefono;
-        while (true) {
-            try {
-                Mensajes.mensajeTelefono();
-                telefono = scanner.nextLine().trim();
-                Validador.validandoTelefono(telefono);
-                Validador.telefonoDuplicado(telefono, baseClientes);
-                return telefono;
-            } catch (ErrorIngresoTelefonoException | ErrorTelefonoDuplicado e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Pide al usuario que ingrese el email del cliente y comprueba que sea válido
-     *
-     * @param baseClientes ArrayList con la base de datos clientes
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     *
-     * @return String Email del cliente
-     */
-    public static String ingresarEmail(ArrayList<Cliente> baseClientes, Scanner scanner){
-        String email;
-        while (true){
-            try {
-                Mensajes.mensajeEmail();
-                email = scanner.nextLine().trim().toLowerCase();
-                Validador.validandoEmail(email);
-                Validador.emailDuplicado(email, baseClientes);
-                return email;
-            } catch (ErrorIngresoEmailException | ErrorEmailDuplicado e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
      * Agrega un nuevo cliente
      *
      * @param baseClientes ArrayList con la base de datos clientes
      * @param scanner Scanner para leer los valores ingresados por el usuario
      */
     public static void agregarCliente(ArrayList<Cliente> baseClientes, Scanner scanner){
-        String dni = ingresarDni(scanner);
+        String dni = Consola.ingresarDni(scanner);
         Cliente cliente = buscarPorDni(dni, baseClientes);
 
         try {
-            Validador.existeCliente(cliente);
-            Cliente clienteNuevo = new Cliente(ingresarNombre(scanner), dni, ingresarTelefono(baseClientes, scanner), ingresarEmail(baseClientes, scanner));
-            baseClientes.add(clienteNuevo);
-            Mensajes.clienteAgregado();
+            Validador.validarClienteNoExiste(cliente);
+            Cliente clienteNuevo = new Cliente(Consola.ingresarNombre(scanner), dni, Consola.ingresarTelefono(baseClientes, scanner), Consola.ingresarEmail(baseClientes, scanner));
+            confirmarAgregarCliente(clienteNuevo, baseClientes, scanner);
         } catch (ErrorYaExisteCliente e) {
             System.out.println(e.getMessage());
         }
 
         Mensajes.ingresarNuevoCliente();
+    }
+
+    /**
+     * Solicita confirmación al usuario para llevar a cabo la ingreso del cliente a la base de datos
+     *
+     * @param cliente {@code Cliente} que va a ser agregado
+     * @param baseClientes ArrayList con la base de datos clientes
+     * @param scanner Scanner para leer los valores ingresados por el usuario
+     */
+    public static void confirmarAgregarCliente(Cliente cliente, ArrayList<Cliente> baseClientes, Scanner scanner){
+        Mensajes.confirmarAgregarCliente(cliente);
+        if (Repetir.deseaRepetirAccion(scanner)){
+            baseClientes.add(cliente);
+            Mensajes.clienteAgregado();
+        }else{
+            Mensajes.procesoAgregarClienteCancelado();
+        }
     }
 
     /**
@@ -222,11 +148,11 @@ public class GestorClientes {
      * @param scanner Scanner para leer los valores ingresados por el usuario
      */
     public static void  eliminarCliente(ArrayList<Cliente> baseClientes, Scanner scanner){
-        String dni = ingresarDni(scanner);
+        String dni = Consola.ingresarDni(scanner);
         Cliente cliente = buscarPorDni(dni, baseClientes);
 
         try{
-            Validador.validandoExistenciaCliente(cliente);
+            Validador.validarExistenciaCliente(cliente);
             confirmarEliminacion(cliente, baseClientes, scanner);
         } catch (ErrorClienteNoExiste e) {
             System.out.println(e.getMessage());
@@ -246,6 +172,8 @@ public class GestorClientes {
         if (Repetir.deseaRepetirAccion(scanner)){
             baseClientes.remove(cliente);
             Mensajes.clienteEliminado();
+        }else{
+            Mensajes.eliminacionAbortada();
         }
     }
 
@@ -256,22 +184,22 @@ public class GestorClientes {
      * @param scanner Scanner para leer los valores ingresados por el usuario
      */
     public static void modificarCliente(ArrayList<Cliente> baseClientes, Scanner scanner){
-        String dni = ingresarDni(scanner);
+        String dni = Consola.ingresarDni(scanner);
         Cliente cliente = buscarPorDni(dni, baseClientes);
 
         try {
-            Validador.validandoExistenciaCliente(cliente);
+            Validador.validarExistenciaCliente(cliente);
             Mensajes.menuModificarValores();
             int opc = SelectorOpciones.elegir_opcion(5, scanner);
             switch (opc){
-                case 1 -> confirmarCambio("NOMBRE", cliente, ingresarNombre(scanner), cliente.getNombre(), scanner);
+                case 1 -> confirmarCambio("NOMBRE", cliente, Consola.ingresarNombre(scanner), cliente.getNombre(), scanner);
                 case 2 -> {
-                    String nuevoDni = ingresarDni(scanner);
-                    Validador.validandoDniDuplicado(dni, baseClientes);
+                    String nuevoDni = Consola.ingresarDni(scanner);
+                    Validador.validarDniDuplicado(dni, baseClientes);
                     confirmarCambio("DNI", cliente, nuevoDni, cliente.getDni(), scanner);
                 }
-                case 3 -> confirmarCambio("TELEFONO", cliente, ingresarTelefono(baseClientes, scanner), cliente.getTelefono(), scanner);
-                case 4 -> confirmarCambio("EMAIL", cliente, ingresarEmail(baseClientes, scanner), cliente.getEmail(), scanner);
+                case 3 -> confirmarCambio("TELEFONO", cliente, Consola.ingresarTelefono(baseClientes, scanner), cliente.getTelefono(), scanner);
+                case 4 -> confirmarCambio("EMAIL", cliente, Consola.ingresarEmail(baseClientes, scanner), cliente.getEmail(), scanner);
                 case 5 -> { return; }
             }
         } catch (ErrorClienteNoExiste | ErrorDniDuplicado e) {
@@ -305,7 +233,7 @@ public class GestorClientes {
     }
 
     /**
-     * Muestra un listado con todos los clientes de la base de datos.
+     * Muestra un listado ordenado por nombre con todos los clientes de la base de datos.
      *
      * @param baseClientes ArrayList con la base de datos clientes
      */

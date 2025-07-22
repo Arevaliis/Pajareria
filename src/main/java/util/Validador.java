@@ -24,7 +24,7 @@ public class Validador {
      * @param valorTop Valor máximo permitido
      * @throws ValorFueraRangoExcepcion si opc está fuera del rango permitido
      */
-    public static void validandoRango(int opc, int valorTop) throws ValorFueraRangoExcepcion {
+    public static void validarRango(int opc, int valorTop) throws ValorFueraRangoExcepcion {
         if (0 >= opc || opc > valorTop ){
             throw new ValorFueraRangoExcepcion("\nError -> El valor ingresado debe estar entre 1 y " + valorTop + ".");
         }
@@ -36,7 +36,7 @@ public class Validador {
      * @param nombre Nombre ingresado
      * @throws ErrorIngresoNombreException si el nombre contiene un número o un símbolo
      */
-    public static void validandoNombre(String nombre) throws ErrorIngresoNombreException {
+    public static void validarNombre(String nombre) throws ErrorIngresoNombreException {
         if (nombre.length() < 3){
             throw new ErrorIngresoNombreException("\nError -> El nombre debe contener al menos 3 letras.");
         }
@@ -50,9 +50,9 @@ public class Validador {
      * Valida que el DNI este en el formato correcto
      *
      * @param dni DNI ingresado
-     * @throws ErrorIngresoDniException si el dno no contiene 8 números y 1 letra.
+     * @throws ErrorIngresoDniException si el dni no contiene 8 números y 1 letra.
      */
-    public static void validandoDni(String dni) throws ErrorIngresoDniException {
+    public static void validarDni(String dni) throws ErrorIngresoDniException {
         if (!dni.matches("^\\d{8}.*")) {
             throw new ErrorIngresoDniException("\nError -> El DNI debe comenzar con 8 dígitos.");
         }
@@ -66,10 +66,10 @@ public class Validador {
      * Comprueba que el dni no pertenezca a otro cliente
      *
      * @param dni Dni ingresado
-     * @param baseClientes Arraylist de {@code Clientes}
+     * @param baseClientes Arraylist de {@code Cliente}
      * @throws ErrorDniDuplicado si el dni ya existe
      */
-    public static void validandoDniDuplicado(String dni, ArrayList<Cliente> baseClientes) throws ErrorDniDuplicado {
+    public static void validarDniDuplicado(String dni, ArrayList<Cliente> baseClientes) throws ErrorDniDuplicado {
         for (Cliente cliente : baseClientes) {
             if (cliente.getDni().equalsIgnoreCase(dni)) {
                 throw new ErrorDniDuplicado("\nError: Ya existe un cliente registrado con ese DNI.");
@@ -81,9 +81,9 @@ public class Validador {
      * Valida que el teléfono ingresado sea válido
      *
      * @param telefono Teléfono del cliente ingresado
-     * @throws ErrorIngresoTelefonoException si el teléfono ingresado no empieza por 6,7,8 o 9 y 8 números más.
+     * @throws ErrorIngresoTelefonoException si no comienza por 6, 7, 8 o 9 y no tiene exactamente 9 cifras.
      */
-    public static void validandoTelefono(String telefono) throws ErrorIngresoTelefonoException {
+    public static void validarTelefono(String telefono) throws ErrorIngresoTelefonoException {
         if (!telefono.matches("^[6789].*")) {
             throw new ErrorIngresoTelefonoException("\nError -> El teléfono debe comenzar por 6, 7, 8 o 9.");
         }
@@ -100,7 +100,7 @@ public class Validador {
      * @param baseClientes Arraylist de {@code Clientes}
      * @throws ErrorTelefonoDuplicado si el teléfono ingresado ya existe
      */
-    public static void telefonoDuplicado(String telefono, ArrayList<Cliente> baseClientes) throws ErrorTelefonoDuplicado{
+    public static void validarTelefonoDuplicado(String telefono, ArrayList<Cliente> baseClientes) throws ErrorTelefonoDuplicado{
         for (Cliente cliente : baseClientes) {
             if (cliente.getTelefono().equalsIgnoreCase(telefono)) {
                 throw new ErrorTelefonoDuplicado("\nError: Ya existe un cliente con ese número de teléfono.");
@@ -112,9 +112,9 @@ public class Validador {
      * Comprueba que el email ingresado tenga un formato válido: usuario@dominio.extensión
      *
      * @param email Email del cliente ingresado
-     * @throws ErrorIngresoEmailException si el email ingresado no es válido
+     * @throws ErrorIngresoEmailException si el formato del email no es válido o el dominio no está permitido
      */
-    public static void validandoEmail(String email) throws ErrorIngresoEmailException {
+    public static void validarEmail(String email) throws ErrorIngresoEmailException {
         int indiceArroba = email.indexOf("@");
 
         if (indiceArroba == -1){
@@ -161,7 +161,7 @@ public class Validador {
      * @param baseClientes Arraylist de {@code Clientes}
      * @throws ErrorEmailDuplicado si el email ya existe
      */
-    public static void emailDuplicado(String email, ArrayList<Cliente> baseClientes) throws ErrorEmailDuplicado{
+    public static void validarEmailDuplicado(String email, ArrayList<Cliente> baseClientes) throws ErrorEmailDuplicado{
         for (Cliente cliente: baseClientes){
             if (cliente.getEmail().equalsIgnoreCase(email)){
                 throw new ErrorEmailDuplicado("\nError: Ya existe un cliente con ese email.");
@@ -175,7 +175,7 @@ public class Validador {
      * @param color Color ingresado
      * @throws ErrorIngresoColor si el color ingresado no está en el ArrayList
      */
-    public static void validandoColor(String color) throws ErrorIngresoColor{
+    public static void validarColor(String color) throws ErrorIngresoColor{
         ArrayList<String> colores = new ArrayList<>(Arrays.asList(
                 "ROJO",
                 "AZUL",
@@ -202,7 +202,7 @@ public class Validador {
      * @param base ArrayList con la base de datos de clientes
      * @throws ErrorBaseDatosClientesVacia si la base de datos de clientes está vacía
      */
-    public static void validandoBaseClientes(ArrayList<Cliente> base) throws ErrorBaseDatosClientesVacia{
+    public static void validarBaseClientesVacia(ArrayList<Cliente> base) throws ErrorBaseDatosClientesVacia{
         if (base.isEmpty()){
             throw new ErrorBaseDatosClientesVacia("\nError -> Hay 0 clientes agregados. Debe ingresar algún cliente para poder hacer una venta.");
         }
@@ -214,7 +214,7 @@ public class Validador {
      * @param base ArrayList con la base de datos de pájaros
      * @throws ErrorBaseDatosPajarosVacia si la base de datos de pájaros está vacía
      */
-    public static void validandoBasePajaros(ArrayList<Pajaro> base) throws ErrorBaseDatosPajarosVacia{
+    public static void validarBasePajarosVacia(ArrayList<Pajaro> base) throws ErrorBaseDatosPajarosVacia{
         if (base.isEmpty()){
             throw new ErrorBaseDatosPajarosVacia("\nError -> Hay 0 especies agregadas. Debe ingresar alguna especie para poder hacer una venta.");
         }
@@ -226,7 +226,7 @@ public class Validador {
      * @param cliente Cliente a verificar
      * @throws ErrorClienteNoExiste si el cliente no existe
      */
-    public static void validandoExistenciaCliente(Cliente cliente) throws ErrorClienteNoExiste{
+    public static void validarExistenciaCliente(Cliente cliente) throws ErrorClienteNoExiste{
         if (cliente == null){
             throw new ErrorClienteNoExiste("\nError -> No existe el cliente");
         }
@@ -238,9 +238,9 @@ public class Validador {
      * @param cliente {@code Cliente} ha ingresar
      * @throws ErrorYaExisteCliente si el cliente ya existe
      */
-    public static void existeCliente(Cliente cliente) throws ErrorYaExisteCliente {
+    public static void validarClienteNoExiste(Cliente cliente) throws ErrorYaExisteCliente {
         if (cliente != null){
-            throw new ErrorYaExisteCliente("\nError ->Ya existe un cliente registrado con ese DNI.");
+            throw new ErrorYaExisteCliente("\nError -> Ya existe un cliente registrado con ese DNI.");
         }
     }
 
@@ -250,7 +250,7 @@ public class Validador {
      * @param pajaro {@code Pajaro} ingresado
      * @throws ErrorNoExistePajaro si no existe el pájaro
      */
-    public static void noExistePajaro(Pajaro pajaro) throws ErrorNoExistePajaro{
+    public static void validarExistenciaPajaro(Pajaro pajaro) throws ErrorNoExistePajaro{
         if (pajaro == null){
             throw new ErrorNoExistePajaro("\nError -> No se ha encontrado ningún pájaro de esa especie.");
         }
@@ -263,7 +263,7 @@ public class Validador {
      * @param basePajaros ArrayList con la base de datos de pájaros
      * @throws ErrorYaExisteEspecie si ya existe
      */
-    public static void yaExisteEspecie(String especie, ArrayList<Pajaro> basePajaros) throws ErrorYaExisteEspecie{
+    public static void validarYaExisteEspecie(String especie, ArrayList<Pajaro> basePajaros) throws ErrorYaExisteEspecie{
         for(Pajaro pajaro: basePajaros) {
             if (pajaro.getEspecie().equalsIgnoreCase(especie)) {
                 throw new ErrorYaExisteEspecie("\nError -> Ya existe esa especie de pájaro.");
@@ -277,21 +277,9 @@ public class Validador {
      * @param ventasCliente ArrayList con el historial de compra del cliente
      * @throws ErrorNoVentasCliente si el cliente todavía no ha hecho ninguna compra
      */
-    public static void validandoVentasClientes(ArrayList<Venta> ventasCliente) throws ErrorNoVentasCliente{
+    public static void validarVentasClientes(ArrayList<Venta> ventasCliente) throws ErrorNoVentasCliente{
         if (ventasCliente.isEmpty()) {
             throw new ErrorNoVentasCliente("\nError -> El cliente todavía no ha realizado ninguna compra.");
-        }
-    }
-
-    /**
-     * Comprueba la cantidad a ingresar
-     *
-     * @param cantidad Cantidad ingresada
-     * @throws ErrorValorInferiorCero Error si la cantidad ingresada es menor a 1.
-     */
-    public static void validandoCantidadStock(int cantidad) throws ErrorValorInferiorCero{
-        if (cantidad < 0){
-            throw new ErrorValorInferiorCero("\nError -> La cantidad a ingresar no puede ser menor de 0.");
         }
     }
 
@@ -302,7 +290,7 @@ public class Validador {
      * @param pajaro {@code Pajaro} ingresado
      * @throws ErrorNoHayStock si el stock menos la cantidad es inferior a 0
      */
-    public static void noHayStock(int cantidad, Pajaro pajaro) throws ErrorNoHayStock{
+    public static void validarNoHayStock(int cantidad, Pajaro pajaro) throws ErrorNoHayStock{
         if (pajaro.getStock() - cantidad < 0){
             throw new ErrorNoHayStock("\nError -> No hay stock suficiente. Stock disponible:" + pajaro.getStock());
         }
@@ -314,7 +302,7 @@ public class Validador {
      * @param venta {@code Venta} realizada
      * @throws ErrorCestaVacia si la cesta de compra esta vacía
      */
-    public static void cestaVacia(Venta venta) throws ErrorCestaVacia {
+    public static void validarCestaCompraVacia(Venta venta) throws ErrorCestaVacia {
         if (venta.getLineasDeVenta().isEmpty()) {
             throw new ErrorCestaVacia("\nError -> No ha añadido ningún producto a la cesta. La operación se cancelará.");
         }
@@ -326,9 +314,22 @@ public class Validador {
      * @param baseVentas ArraList con la base de datos ventas
      * @throws ErrorBaseVentasVacia si no hay ninguna venta
      */
-    public static void baseVentasVacia(ArrayList<Venta> baseVentas) throws ErrorBaseVentasVacia{
+    public static void validarBaseVentasVacia(ArrayList<Venta> baseVentas) throws ErrorBaseVentasVacia{
         if (baseVentas.isEmpty()){
             throw new ErrorBaseVentasVacia("\nError -> Historial de ventas vacío. Haga una venta para acceder.");
         }
     }
+
+    /**
+     * Comprueba la cantidad a ingresar
+     *
+     * @param cantidad Cantidad ingresada
+     * @throws ErrorValorInferiorCero Error si la cantidad ingresada es menor a 1.
+     */
+    public static void validarCantidadStock(int cantidad) throws ErrorValorInferiorCero{
+        if (cantidad  < 1 ){
+            throw new ErrorValorInferiorCero("\nError -> La cantidad a ingresar no puede ser menor de 1.");
+        }
+    }
+
 }
