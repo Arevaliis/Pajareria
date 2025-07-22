@@ -32,12 +32,12 @@ class ValidadorTest {
                                     /* ========== Test Rangos ========== */
     @Test
     public void lanzaExcepcionSiValorFueraDeRango() {
-        assertThrows(ValorFueraRangoExcepcion.class, () -> Validador.validandoRango(13, 6));
+        assertThrows(ValorFueraRangoExcepcion.class, () -> Validador.validarRango(13, 6));
     }
 
     @Test
     public void mensajeCorrectoValidandoRanggo() {
-        ValorFueraRangoExcepcion e = assertThrows(ValorFueraRangoExcepcion.class, () -> Validador.validandoRango(13, 6));
+        ValorFueraRangoExcepcion e = assertThrows(ValorFueraRangoExcepcion.class, () -> Validador.validarRango(13, 6));
 
         assertEquals("\nError -> El valor ingresado debe estar entre 1 y 6.", e.getMessage());
     }
@@ -46,29 +46,29 @@ class ValidadorTest {
 
     @Test
     public void lanzaExcepcionSiNombreNoEsValido() {
-        assertThrows(ErrorIngresoNombreException.class, () -> Validador.validandoNombre("Jos3"));
+        assertThrows(ErrorIngresoNombreException.class, () -> Validador.validarNombre("Jos3"));
     }
 
     @Test
     public void lanzaExcepcionSiNombreEsCorto() {
-        assertThrows(ErrorIngresoNombreException.class, () -> Validador.validandoNombre("Jo"));
+        assertThrows(ErrorIngresoNombreException.class, () -> Validador.validarNombre("Jo"));
     }
 
     @Test
     public void noLanzaExcepcionNombre() {
-        assertDoesNotThrow(() -> Validador.validandoNombre("Jose"));
+        assertDoesNotThrow(() -> Validador.validarNombre("Jose"));
     }
 
     @Test
     public void mensajeCorrectoValidandoNombreCorto() {
-        ErrorIngresoNombreException e = assertThrows(ErrorIngresoNombreException.class, () -> Validador.validandoNombre("Jo"));
+        ErrorIngresoNombreException e = assertThrows(ErrorIngresoNombreException.class, () -> Validador.validarNombre("Jo"));
 
         assertEquals("\nError -> El nombre debe contener al menos 3 letras.", e.getMessage());
     }
 
     @Test
     public void mensajeCorrectoValidandoNombreNoValidoi() {
-        ErrorIngresoNombreException e = assertThrows(ErrorIngresoNombreException.class, () -> Validador.validandoNombre("Jos3"));
+        ErrorIngresoNombreException e = assertThrows(ErrorIngresoNombreException.class, () -> Validador.validarNombre("Jos3"));
 
         assertEquals("\nError -> El nombre solo puede contener letras.", e.getMessage());
     }
@@ -77,41 +77,41 @@ class ValidadorTest {
 
     @Test
     public void lanzaExcepcionSiDniFaltanNumeros() {
-        assertThrows(ErrorIngresoDniException.class, () -> Validador.validandoDni("45232F"));
+        assertThrows(ErrorIngresoDniException.class, () -> Validador.validarDni("45232F"));
     }
 
     @Test
     public void lanzaExcepcionSiDniFaltaLetraFinal() {
-        assertThrows(ErrorIngresoDniException.class, () -> Validador.validandoDni("45232245"));
+        assertThrows(ErrorIngresoDniException.class, () -> Validador.validarDni("45232245"));
     }
 
     @Test
     public void mensajeCorrectoValidandoDniNumeros() {
-        ErrorIngresoDniException e = assertThrows(ErrorIngresoDniException.class, () -> Validador.validandoDni("45232F"));
+        ErrorIngresoDniException e = assertThrows(ErrorIngresoDniException.class, () -> Validador.validarDni("45232F"));
 
         assertEquals("\nError -> El DNI debe comenzar con 8 dígitos.", e.getMessage());
     }
 
     @Test
     public void mensajeCorrectoValidandoDniLetra() {
-        ErrorIngresoDniException e = assertThrows(ErrorIngresoDniException.class, () -> Validador.validandoDni("45232545"));
+        ErrorIngresoDniException e = assertThrows(ErrorIngresoDniException.class, () -> Validador.validarDni("45232545"));
 
         assertEquals("\nError -> El DNI debe terminar con una letra.", e.getMessage());
     }
 
     @Test
     public void lanzaExcepcionSiDniDuplicado() {
-        assertThrows(ErrorDniDuplicado.class, () -> Validador.validandoDniDuplicado("45454545F", baseClientes));
+        assertThrows(ErrorDniDuplicado.class, () -> Validador.validarDniDuplicado("45454545F", baseClientes));
     }
 
     @Test
     public void dniNoDuplicadoNoLanzaExcepcion() {
-        assertDoesNotThrow(() -> Validador.validandoDniDuplicado("12345678A", baseClientes));
+        assertDoesNotThrow(() -> Validador.validarDniDuplicado("12345678A", baseClientes));
     }
 
     @Test
     public void mensajeCorrectoDniDuplicado() {
-        ErrorDniDuplicado e = assertThrows(ErrorDniDuplicado.class, () -> Validador.validandoDniDuplicado("45454545F", baseClientes));
+        ErrorDniDuplicado e = assertThrows(ErrorDniDuplicado.class, () -> Validador.validarDniDuplicado("45454545F", baseClientes));
 
         assertEquals("\nError: Ya existe un cliente registrado con ese DNI.", e.getMessage());
     }
@@ -120,46 +120,46 @@ class ValidadorTest {
 
     @Test
     public void lanzaExcepcionMalComienzoTelefono() {
-        assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validandoTelefono("554545454"));
+        assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validarTelefono("554545454"));
     }
 
     @Test
     public void lanzaExcepcionTelefonoCorto() {
-        assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validandoTelefono("6545454"));
+        assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validarTelefono("6545454"));
     }
 
     @Test
     public void noLanzaExcepcionTelefonoValido() {
-        assertDoesNotThrow(() -> Validador.validandoTelefono("654542365"));
+        assertDoesNotThrow(() -> Validador.validarTelefono("654542365"));
     }
 
     @Test
     public void lanzaExcepcionTelefonoDuplicado() {
-        assertThrows(ErrorTelefonoDuplicado.class, () -> Validador.telefonoDuplicado("654545454", baseClientes));
+        assertThrows(ErrorTelefonoDuplicado.class, () -> Validador.validarTelefonoDuplicado("654545454", baseClientes));
     }
 
     @Test
     public void noLanzaExcepcionTelefonoDuplicado() {
-        assertDoesNotThrow(() -> Validador.telefonoDuplicado("789456123", baseClientes));
+        assertDoesNotThrow(() -> Validador.validarTelefonoDuplicado("789456123", baseClientes));
     }
 
     @Test
     public void mensajeCorrectoMalComienzoTelefono() {
-        ErrorIngresoTelefonoException e = assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validandoTelefono("545445454"));
+        ErrorIngresoTelefonoException e = assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validarTelefono("545445454"));
 
         assertEquals("\nError -> El teléfono debe comenzar por 6, 7, 8 o 9.", e.getMessage());
     }
 
     @Test
     public void mensajeCorrectoTelefonoCorto() {
-        ErrorIngresoTelefonoException e = assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validandoTelefono("65454"));
+        ErrorIngresoTelefonoException e = assertThrows(ErrorIngresoTelefonoException.class, () -> Validador.validarTelefono("65454"));
 
         assertEquals("\nError -> El teléfono debe tener exactamente 9 dígitos.", e.getMessage());
     }
 
     @Test
     public void mensajeCorrectoTelefonoDuplicado() {
-        ErrorTelefonoDuplicado e = assertThrows(ErrorTelefonoDuplicado.class, () -> Validador.telefonoDuplicado("654545454", baseClientes));
+        ErrorTelefonoDuplicado e = assertThrows(ErrorTelefonoDuplicado.class, () -> Validador.validarTelefonoDuplicado("654545454", baseClientes));
 
         assertEquals("\nError: Ya existe un cliente con ese número de teléfono.", e.getMessage());
     }
@@ -168,53 +168,53 @@ class ValidadorTest {
 
     @Test
     public void lanzaExcepcionNoContieneArroba() {
-        assertThrows(ErrorIngresoEmailException.class, () -> Validador.validandoEmail("jjw.com"));
+        assertThrows(ErrorIngresoEmailException.class, () -> Validador.validarEmail("jjw.com"));
     }
 
     @Test
     public void lanzaExcepcionMalUsuario() {
-        assertThrows(ErrorIngresoEmailException.class, () -> Validador.validandoEmail("@.com"));
+        assertThrows(ErrorIngresoEmailException.class, () -> Validador.validarEmail("@.com"));
     }
 
     @Test
     public void lanzaExcepcionMalExtension() {
-        assertThrows(ErrorIngresoEmailException.class, () -> Validador.validandoEmail("jj@gail.com"));
+        assertThrows(ErrorIngresoEmailException.class, () -> Validador.validarEmail("jj@gail.com"));
     }
 
 
     @Test
     public void noLanzaExcepcionEmailNoValido() {
-        assertDoesNotThrow(() -> Validador.validandoEmail("jose@gmail.com"));
+        assertDoesNotThrow(() -> Validador.validarEmail("jose@gmail.com"));
     }
 
     @Test
     public void lanzaExcepcionEmailDuplicado() {
-        assertThrows(ErrorEmailDuplicado.class, () -> Validador.emailDuplicado("juan@gmail.com", baseClientes));
+        assertThrows(ErrorEmailDuplicado.class, () -> Validador.validarEmailDuplicado("juan@gmail.com", baseClientes));
     }
 
     @Test
     public void noLanzaExcepcionEmailDuplicado() {
-        assertDoesNotThrow(() -> Validador.emailDuplicado("jose@gmaill.com", baseClientes));
+        assertDoesNotThrow(() -> Validador.validarEmailDuplicado("jose@gmaill.com", baseClientes));
     }
 
 
     @Test
     public void mensajeCorrectoFaltaArrobaEmail() {
-        ErrorIngresoEmailException e = assertThrows(ErrorIngresoEmailException.class, () -> Validador.validandoEmail("josehotmail.com"));
+        ErrorIngresoEmailException e = assertThrows(ErrorIngresoEmailException.class, () -> Validador.validarEmail("josehotmail.com"));
 
         assertEquals("\nError -> El email debe tener @", e.getMessage());
     }
 
     @Test
     public void mensajeCorrectoMalUsuarioEmail() {
-        ErrorIngresoEmailException e = assertThrows(ErrorIngresoEmailException.class, () -> Validador.validandoEmail("@hotmail.com"));
+        ErrorIngresoEmailException e = assertThrows(ErrorIngresoEmailException.class, () -> Validador.validarEmail("@hotmail.com"));
 
         assertEquals("\nError -> Usuario mal ingresado. Debe contener al menos 1 carácter válido.", e.getMessage());
     }
 
     @Test
     public void mensajeCorrectoMalExtensionEmail(){
-        ErrorIngresoEmailException e = assertThrows(ErrorIngresoEmailException.class, () -> Validador.validandoEmail("jj@yohuu.com"));
+        ErrorIngresoEmailException e = assertThrows(ErrorIngresoEmailException.class, () -> Validador.validarEmail("jj@yohuu.com"));
 
         ArrayList<String> dominiosComunes = new ArrayList<>(
                 List.of(
@@ -243,7 +243,7 @@ class ValidadorTest {
 
     @Test
     public void mensajeCorrectoEmailDuplicado(){
-        ErrorEmailDuplicado e = assertThrows(ErrorEmailDuplicado.class, () -> Validador.emailDuplicado("juan@gmail.com", baseClientes));
+        ErrorEmailDuplicado e = assertThrows(ErrorEmailDuplicado.class, () -> Validador.validarEmailDuplicado("juan@gmail.com", baseClientes));
 
         assertEquals("\nError: Ya existe un cliente con ese email.", e.getMessage());
     }
@@ -252,12 +252,12 @@ class ValidadorTest {
 
     @Test
     public void lanzaExcepcionNoEsColor(){
-        assertThrows(ErrorIngresoColor.class, () -> Validador.validandoColor("PROGRAMA"));
+        assertThrows(ErrorIngresoColor.class, () -> Validador.validarColor("PROGRAMA"));
     }
 
     @Test
     public void noLanzaExcepcionNoEsColor(){
-        assertDoesNotThrow(() -> Validador.validandoColor("AZUL"));
+        assertDoesNotThrow(() -> Validador.validarColor("AZUL"));
     }
 
     @Test
@@ -276,7 +276,7 @@ class ValidadorTest {
         ));
 
         String mensaje = "\nError -> Debe ingresar uno de estos colores: " + String.join(", ", colores);
-        ErrorIngresoColor e = assertThrows(ErrorIngresoColor.class, () -> Validador.validandoColor("PROGRAMA"));
+        ErrorIngresoColor e = assertThrows(ErrorIngresoColor.class, () -> Validador.validarColor("PROGRAMA"));
         assertEquals(mensaje, e.getMessage());
     }
 
@@ -284,18 +284,18 @@ class ValidadorTest {
 
     @Test
     public void noLanzaErrorSiBaseClientesVacia(){
-        assertDoesNotThrow(() -> Validador.validandoBaseClientes(baseClientes));
+        assertDoesNotThrow(() -> Validador.validarBaseClientesVacia(baseClientes));
     }
 
     @Test
     public void lanzaErrorSiBaseClientesVacia(){
         baseClientes.clear();
-        assertThrows(ErrorBaseDatosClientesVacia.class, () -> Validador.validandoBaseClientes(baseClientes)); }
+        assertThrows(ErrorBaseDatosClientesVacia.class, () -> Validador.validarBaseClientesVacia(baseClientes)); }
 
     @Test
     public void mensajeErrorBaseClientesVacia(){
         baseClientes.clear();
-        ErrorBaseDatosClientesVacia e = assertThrows(ErrorBaseDatosClientesVacia.class, () -> Validador.validandoBaseClientes(baseClientes));
+        ErrorBaseDatosClientesVacia e = assertThrows(ErrorBaseDatosClientesVacia.class, () -> Validador.validarBaseClientesVacia(baseClientes));
 
         assertEquals("\nError -> Hay 0 clientes agregados. Debe ingresar algún cliente para poder hacer una venta.", e.getMessage());
     }
@@ -303,7 +303,7 @@ class ValidadorTest {
     @Test
     public void lanzaErrorSiClienteYaExiste() {
         Cliente cliente = new Cliente("JUAN", "45454545F", "654545454", "juan@gmail.com");
-        assertThrows(ErrorYaExisteCliente.class, () -> Validador.existeCliente(cliente));
+        assertThrows(ErrorYaExisteCliente.class, () -> Validador.validarClienteNoExiste(cliente));
     }
 
 
@@ -313,31 +313,31 @@ class ValidadorTest {
     @Test
     public void lanzaErrorSiBasePajarosVacia(){
         basePajaros.clear();
-        assertThrows(ErrorBaseDatosPajarosVacia.class, () -> Validador.validandoBasePajaros(basePajaros));
+        assertThrows(ErrorBaseDatosPajarosVacia.class, () -> Validador.validarBasePajarosVacia(basePajaros));
     }
 
     @Test
     public void noLanzaErrorSiBasePajarosVacia(){
-        assertDoesNotThrow(() -> Validador.validandoBasePajaros(basePajaros));
+        assertDoesNotThrow(() -> Validador.validarBasePajarosVacia(basePajaros));
     }
 
     @Test
     public void mensajeErrorBasePajarosVacia(){
         basePajaros.clear();
 
-        ErrorBaseDatosPajarosVacia e = assertThrows(ErrorBaseDatosPajarosVacia.class, () -> Validador.validandoBasePajaros(basePajaros));
+        ErrorBaseDatosPajarosVacia e = assertThrows(ErrorBaseDatosPajarosVacia.class, () -> Validador.validarBasePajarosVacia(basePajaros));
 
         assertEquals("\nError -> Hay 0 especies agregadas. Debe ingresar alguna especie para poder hacer una venta.", e.getMessage());
     }
 
     @Test
     public void lanzaErrorSiPajaroNoExiste() {
-        assertThrows(ErrorNoExistePajaro.class, () -> Validador.noExistePajaro(null));
+        assertThrows(ErrorNoExistePajaro.class, () -> Validador.validarExistenciaPajaro(null));
     }
 
     @Test
     public void lanzaErrorSiEspecieYaExiste() {
-        assertThrows(ErrorYaExisteEspecie.class, () -> Validador.yaExisteEspecie("loro", basePajaros));
+        assertThrows(ErrorYaExisteEspecie.class, () -> Validador.validarYaExisteEspecie("loro", basePajaros));
     }
 
                                     /* ========== Test Ventas ========== */
@@ -345,37 +345,37 @@ class ValidadorTest {
     @Test
     public void lanzaErrorSiClienteNoTieneVentas() {
         baseVentas.clear();
-        assertThrows(ErrorNoVentasCliente.class, () -> Validador.validandoVentasClientes(baseVentas));
+        assertThrows(ErrorNoVentasCliente.class, () -> Validador.validarVentasClientes(baseVentas));
     }
 
     @Test
     public void lanzaErrorSiCantidadMenorAUno() {
-        assertThrows(ErrorValorInferiorCero.class, () -> Validador.validandoCantidadStock(0));
+        assertThrows(ErrorValorInferiorCero.class, () -> Validador.validarCantidadStock(-5));
     }
 
     @Test
     public void lanzaErrorSiNoHayStockSuficiente() {
         Pajaro pajaro = basePajaros.getFirst();
-        assertThrows(ErrorNoHayStock.class, () -> Validador.noHayStock(20, pajaro));
+        assertThrows(ErrorNoHayStock.class, () -> Validador.validarNoHayStock(20, pajaro));
     }
 
     @Test
     public void lanzaErrorSiCestaVacia() {
         baseVentas.getFirst().getLineasDeVenta().clear();
-        assertThrows(ErrorCestaVacia.class, () -> Validador.cestaVacia(baseVentas.getFirst()));
+        assertThrows(ErrorCestaVacia.class, () -> Validador.validarCestaCompraVacia(baseVentas.getFirst()));
     }
 
     @Test
     public void noLanzaErrorSiCestaVacia() {
         Venta venta = baseVentas.getFirst();
-        assertDoesNotThrow(() -> Validador.cestaVacia(venta));
+        assertDoesNotThrow(() -> Validador.validarCestaCompraVacia(venta));
     }
 
 
     @Test
     public void lanzaErrorSiBaseVentasVacia() {
         baseVentas.clear();
-        assertThrows(ErrorBaseVentasVacia.class, () -> Validador.baseVentasVacia(baseVentas));
+        assertThrows(ErrorBaseVentasVacia.class, () -> Validador.validarBaseVentasVacia(baseVentas));
 
     }
 

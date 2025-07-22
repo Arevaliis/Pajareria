@@ -69,92 +69,16 @@ public class GestorPajaros {
                 case 3 -> {
                     try{
                         Pajaro pajaro = busquedaPorEspecie(basePajaros, scanner);
-                        Validador.noExistePajaro(pajaro);
+                        Validador.validarExistenciaPajaro(pajaro);
                     } catch (ErrorNoExistePajaro e) {
                         System.out.println(e.getMessage());
                     }
-
                     Mensajes.volverBuscarPajaro();
                 }
                 case 4 -> agregarStockEspecie(basePajaros, scanner);
                 case 5 -> { return; }
             }
         } while (Repetir.deseaRepetirAccion(scanner));
-    }
-
-    /**
-     * Pide al usuario que ingrese la especie del pájaro
-     *
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     * @return String con la especie del pájaro
-     */
-    public static String ingresarEspecie(Scanner scanner){
-        while (true){
-            try {
-                Mensajes.mensajeEspecie();
-                String especie = scanner.nextLine().trim().toUpperCase();
-                Validador.validandoNombre(especie);
-                return especie;
-            }catch (ErrorIngresoNombreException e){
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Pide al usuario que ingrese el color del pájaro
-     *
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     * @return String con el color del pájaro
-     */
-    public static String ingresarColor(Scanner scanner){
-        while (true){
-            try {
-                Mensajes.mensajeColor();
-                String color = scanner.nextLine().trim().toUpperCase();
-                Validador.validandoColor(color);
-                return color;
-            } catch (ErrorIngresoColor e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    /**
-     * Pide al usuario que ingrese el precio del pájaro
-     *
-     * @param scanner Scanner para leer los valores ingresados por el usuario
-     * @return double con el precio del pájaro
-     */
-    public static double ingresarPrecio(Scanner scanner){
-        while (true){
-            try {
-                Mensajes.mensajePrecio();
-                return (double) Math.round(Double.parseDouble(scanner.nextLine().trim()) * 100) /100;
-            } catch (NumberFormatException e) {
-                System.out.println("\nError -> Debe ingresar un número. Use punto para los decimales.");
-            }
-        }
-    }
-
-    /**
-     * Pide al usuario que ingrese la cantidad disponible
-     *
-     * @return  int con la cantidad disponible del pájaro
-     */
-    public static int ingresarStock(Scanner scanner){
-        while (true){
-           try {
-               Mensajes.mensajeStock();
-               int cantidad = Integer.parseInt(scanner.nextLine());
-               Validador.validandoCantidadStock(cantidad);
-               return cantidad;
-           }catch (ErrorValorInferiorCero e){
-               System.out.println(e.getMessage());
-           }catch (NumberFormatException e) {
-               System.out.println("\nError -> Debe ingresar un número.");
-           }
-       }
     }
 
     /**
@@ -165,17 +89,33 @@ public class GestorPajaros {
      */
     public static void agregarPajaro(ArrayList<Pajaro> basePajaros, Scanner scanner){
         try{
-            String especie = ingresarEspecie(scanner);
-            Validador.yaExisteEspecie(especie, basePajaros);
+            String especie = Consola.ingresarEspecie(scanner);
+            Validador.validarYaExisteEspecie(especie, basePajaros);
 
-            Pajaro pajaro = new Pajaro(especie, ingresarColor(scanner), ingresarPrecio(scanner), ingresarStock(scanner));
-            basePajaros.add(pajaro);
-            Mensajes.agregadoPajaroConExito();
+            Pajaro pajaro = new Pajaro(especie, Consola.ingresarColor(scanner), Consola.ingresarPrecio(scanner), Consola.ingresarStock(scanner));
+            confirmarAgregarPajaro(pajaro, basePajaros, scanner);
         } catch (ErrorYaExisteEspecie e) {
             System.out.println(e.getMessage());
         }
 
         Mensajes.agregarOtroPajaro();
+    }
+
+    /**
+     * Solicia al usuario la confirmación para ingresar el nuevo pájaro a la base de datos
+     *
+     * @param pajaro Pajaro de la base de datos
+     * @param basePajaros ArrayList de Pájaros
+     * @param scanner Scanner para leer los valores ingresados por el usuario
+     */
+    public static void confirmarAgregarPajaro(Pajaro pajaro, ArrayList<Pajaro> basePajaros, Scanner scanner){
+        Mensajes.confirmarAgregarPajaro(pajaro);
+        if (Repetir.deseaRepetirAccion(scanner)){
+            basePajaros.add(pajaro);
+            Mensajes.agregadoPajaroConExito();
+        }else{
+            Mensajes.pajaroNoAgregado();
+        }
     }
 
     /**
@@ -186,7 +126,7 @@ public class GestorPajaros {
      * @return {@code Pájaro} Si existe la especie, en caso contrario devuelve {@code null}
      */
     public static Pajaro busquedaPorEspecie(ArrayList<Pajaro> basePajaros, Scanner scanner){
-        String especie = ingresarEspecie(scanner);
+        String especie = Consola.ingresarEspecie(scanner);
 
         for (Pajaro pajaro: basePajaros){
             if(pajaro.getEspecie().equalsIgnoreCase(especie)){
@@ -220,20 +160,33 @@ public class GestorPajaros {
         Pajaro pajaro = busquedaPorEspecie(basePajaros, scanner);
 
         try {
-            Validador.noExistePajaro(pajaro);
-            int cantidad = ingresarStock(scanner);
-            pajaro.setStock(pajaro.getStock() + cantidad);
+            Validador.validarExistenciaPajaro(pajaro);
+            int cantidad = Consola.ingresarStock(scanner);
 
-            if (cantidad > 0){
-                Mensajes.modificadoStock();
-            }else{
-                Mensajes.procesoStockAbortado();
-            }
+            confirmarAgregarStock(pajaro, cantidad, scanner);
+
         } catch (ErrorNoExistePajaro e) {
             System.out.println(e.getMessage());
         }
 
         Mensajes.modificarOtraVezStock();
+    }
+
+    /**
+     * Solicita confirmación al usuario para llevar agreagr mas stock a la especie
+     *
+     * @param pajaro Pajaro de la base de datos
+     * @param cantidad Cantidad ingresada
+     * @param scanner Scanner para leer los valores ingresados por el usuario
+     */
+    public static void confirmarAgregarStock(Pajaro pajaro, int cantidad, Scanner scanner) {
+        Mensajes.conirmarAgregarStock(cantidad, pajaro.getEspecie());
+        if (Repetir.deseaRepetirAccion(scanner)){
+            pajaro.setStock(pajaro.getStock() + cantidad);
+            Mensajes.cantidadAgregadaStock(cantidad, pajaro.getEspecie());
+        }else{
+            Mensajes.procesoStockAbortado();
+        }
     }
 
     /**
