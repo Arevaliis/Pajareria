@@ -9,11 +9,8 @@ import util.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static util.Repetir.deseaRepetirAccion;
-import static util.SelectorOpciones.elegir_opcion;
-
 /**
- * Clase principal que inicia la ejecución del programa
+ * Clase principal que inicia la ejecución del programa.
  *
  * @author Jose Iglesias
  * @version 4.0
@@ -33,7 +30,7 @@ public class Main {
 
         while (estaFuncionando){
             Mensajes.menuInicial();
-            int opc = elegir_opcion(5, scanner);
+            int opc = SelectorOpciones.elegir_opcion(5, scanner);
             if (opc != -1){
                 estaFuncionando = ejecutarOpcion(opc, scanner);
             }
@@ -46,7 +43,7 @@ public class Main {
      * Ejecuta la opción elegida por el usuario.
      *
      * @param opc Valor numérico ingresado por el usuario.
-     * @param scanner Scanner para leer los valores ingresados por el usuario
+     * @param scanner Scanner para leer los valores ingresados por el usuario.
      *
      * @return Boolean {@code false} para finalizar la ejecución del programa. {@code true} para seguir en el programa.
      */
@@ -55,7 +52,7 @@ public class Main {
             case 1 -> GestorClientes.ejecutarMenuCliente(baseClientes, scanner);
             case 2 -> GestorPajaros.ejecutarMenuPajaros(basePajaros, scanner);
             case 3 -> GestorVentas.iniciarVenta(baseClientes, basePajaros, baseVentas, scanner);
-            case 4 -> GestorVentas.ejecutarMenuVentasTotales(baseClientes, baseVentas, scanner);
+            case 4 -> GestorMostrarVentas.ejecutarMenuVentasTotales(baseClientes, baseVentas, scanner);
             case 5 -> {
                 Mensajes.saliendo();
                 return false;
@@ -65,15 +62,15 @@ public class Main {
     }
 
     /**
-     * Pregunta al usuario si desea volver al menú principal tras ejecutar una opción.
+     * Pregunta al usuario si desea volver al menú principal tras terminar de ejecutar una opción.
      *
-     * @param scanner Scanner para leer los valores ingresados por el usuario
+     * @param scanner Scanner para leer los valores ingresados por el usuario.
      *
      * @return {@code true} si el usuario desea continuar en el programa; {@code false} si desea salir.
      */
     public static boolean seguir(Scanner scanner){
         Mensajes.mensajeVolverMenu();
-        if (!deseaRepetirAccion(scanner)){
+        if (!Repetir.deseaRepetirAccion(scanner)){
             Mensajes.saliendo();
             return false;
         }

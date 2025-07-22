@@ -6,13 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-import static gestores.GestorPajaros.*;
-import static main.Main.basePajaros;
+import util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GestorPajarosTest {
+    static ArrayList<Pajaro> basePajaros = new ArrayList<>();
+
     @BeforeEach
     public void reinicio(){
         basePajaros.add(new Pajaro("LORO", "VERDE", 5.23, 10));
@@ -23,7 +25,7 @@ class GestorPajarosTest {
         String especie = "Lo\n2345\nLORO";
         Scanner scanner = new Scanner(new ByteArrayInputStream(especie.getBytes()));
 
-        assertEquals("LORO", ingresarEspecie(scanner));
+        assertEquals("LORO", Consola.ingresarEspecie(scanner));
     }
 
     @Test
@@ -31,7 +33,7 @@ class GestorPajarosTest {
         String especie = "Lo\n2345\nAZUL";
         Scanner scanner = new Scanner(new ByteArrayInputStream(especie.getBytes()));
 
-        assertEquals("AZUL", ingresarColor(scanner));
+        assertEquals("AZUL", Consola.ingresarColor(scanner));
     }
 
     @Test
@@ -39,7 +41,7 @@ class GestorPajarosTest {
         String especie = "12,21\nas\n \n12.25";
         Scanner scanner = new Scanner(new ByteArrayInputStream(especie.getBytes()));
 
-        assertEquals(12.25, ingresarPrecio(scanner));
+        assertEquals(12.25, Consola.ingresarPrecio(scanner));
     }
 
     @Test
@@ -47,7 +49,7 @@ class GestorPajarosTest {
         String especie = "  \n-1\nsa\n12";
         Scanner scanner = new Scanner(new ByteArrayInputStream(especie.getBytes()));
 
-        assertEquals(12, ingresarStock(scanner));
+        assertEquals(12, Consola.ingresarStock(scanner));
     }
 
     @Test
@@ -55,7 +57,7 @@ class GestorPajarosTest {
         String especie = basePajaros.getFirst().getEspecie();
         Scanner scanner = new Scanner(new ByteArrayInputStream(especie.getBytes()));
 
-        assertEquals(basePajaros.getFirst(), busquedaPorEspecie(basePajaros, scanner));
+        assertEquals(basePajaros.getFirst(), GestorPajaros.busquedaPorEspecie(basePajaros, scanner));
     }
 
     @Test
@@ -63,16 +65,16 @@ class GestorPajarosTest {
         String especie = "PATO";
         Scanner scanner = new Scanner(new ByteArrayInputStream(especie.getBytes()));
 
-        assertNull(busquedaPorEspecie(basePajaros, scanner));
+        assertNull(GestorPajaros.busquedaPorEspecie(basePajaros, scanner));
     }
 
     @Test
     public void agregarStockNoValidoHastaValido(){
         int stockInicial = basePajaros.getFirst().getStock();
-        String resp = "LORO\ns\n0\n10"; // Este método requiere de varios inputs (Especie y luego Cantidad) Asi logramos simularlo.
+        String resp = "LORO\ns\n100\nS"; // Este método requiere de varios inputs (Especie y luego Cantidad) Asi logramos simularlo.
 
         Scanner scanner = new Scanner(new ByteArrayInputStream(resp.getBytes()));
-        agregarStockEspecie(basePajaros, scanner);
+        GestorPajaros.agregarStockEspecie(basePajaros, scanner);
 
         assertNotEquals(stockInicial, basePajaros.getFirst().getStock());
     }

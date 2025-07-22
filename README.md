@@ -31,8 +31,8 @@ Programa desarrollado en Java para facilitar la gestión de una pajarería. Perm
 |--------:|:-------|
 |     1.0 | ✅      |
 |     2.0 | ✅      |
-|     3.0 | ✅     |
-|     4.0 | 🚧     | 
+|     3.0 | ✅      |
+|     4.0 | ✅      | 
 
 ---
 
